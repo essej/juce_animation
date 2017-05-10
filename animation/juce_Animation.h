@@ -126,7 +126,7 @@ public:
 	/** Sets the length of the animation in milliseconds*/
 	void setDuration(int msDuration);
 
-	/** Returns the current duration of the current loop */
+	/** Returns length of the animation in milliseconds */
     int getDuration() const;
 
     /** Returns whether the animation is infinite */
@@ -236,6 +236,8 @@ private:
     int duration;
 
     int loops;
+
+    int currentLoop;
 
     Direction direction;
 

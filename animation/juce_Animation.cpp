@@ -29,12 +29,13 @@ Animation::Animation(var value)
 
     setEndValue(value);
 
-    speed     = 60;
-    duration  = 0;
-    loops     = 0;
-    direction = Forward;
-    state     = Stopped;
-    curve     = AnimationCurve();
+    speed       = 60;
+    duration    = 0;
+    loops       = 0;
+    currentLoop = 0;
+    direction   = Forward;
+    state       = Stopped;
+    curve       = AnimationCurve();
 
 }
 
@@ -92,6 +93,8 @@ void Animation::stop()
     stopTimer();
 
     setState(Stopped);
+
+    currentLoop = 0;
 
     animationEnded();
 
@@ -258,7 +261,7 @@ int Animation::getNumLoops() const
 int Animation::getCurrentLoop() const
 {
 
-    return 0; // lol
+    return currentLoop;
 
 }
 
@@ -464,9 +467,24 @@ void Animation::timerCallback()
     if (diff > (int64)duration)
     {
 
-        update(1.0);
+        if (currentLoop < loops - 1 || isEndless())
+        {
 
-        stop();
+            time = Time::getCurrentTime();
+
+            update(0.0);
+
+            currentLoop++;
+
+        }
+        else
+        {
+
+            update(1.0);
+
+            stop();
+
+        }
 
     }
     else
