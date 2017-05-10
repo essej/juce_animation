@@ -49,6 +49,9 @@ Animation::~Animation()
 void Animation::start()
 {
 
+    keyStart = getStartValue();
+    keyEnd   = getNextKeyValue(0.0);
+
     if (!isTimerRunning())
     {
 
@@ -103,15 +106,23 @@ void Animation::stop()
 void Animation::update(double progress)
 {
 
-    endValue = getNextKeyValue(progress);
+
+
+    if (keyEnd != getNextKeyValue(progress))
+    {
+
+        keyStart = keyEnd;
+        keyEnd = getNextKeyValue(progress);
+
+    }
 
     progress = curve.perform(progress);
 
     if (currentValue.isInt())
     {
 
-        int v1 = (int)startValue;
-        int v2 = (int)endValue;
+        int v1 = (int)keyStart;
+        int v2 = (int)keyEnd;
 
         var result = v1 + (v2 - v1) * progress;
 
@@ -121,8 +132,8 @@ void Animation::update(double progress)
     else if (currentValue.isDouble())
     {
 
-        int v1 = (double)startValue;
-        int v2 = (double)endValue;
+        int v1 = (double)keyStart;
+        int v2 = (double)keyEnd;
 
         var result = v1 + (v2 - v1) * progress;
 
@@ -135,13 +146,13 @@ void Animation::update(double progress)
         if (progress == 1.0)
         {
 
-            currentValue = endValue;
+            currentValue = keyEnd;
 
         }
         else
         {
 
-            currentValue = startValue;
+            currentValue = keyStart;
 
         }
 
@@ -471,6 +482,9 @@ void Animation::timerCallback()
         {
 
             time = Time::getCurrentTime();
+
+            keyStart = getStartValue();
+            keyEnd   = getNextKeyValue(0.0);
 
             update(0.0);
 

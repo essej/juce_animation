@@ -249,6 +249,9 @@ private:
     var startValue;
     var endValue;
 
+    var keyStart;
+    var keyEnd;
+
     ListenerList<Animation::Listener> listeners;
 
     HashMap<int, var> keyValues;
