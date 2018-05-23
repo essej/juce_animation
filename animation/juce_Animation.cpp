@@ -28,7 +28,7 @@ Animation::Animation(var value)
     currentValue = value;
     setEndValue(value);
 
-    speed       = 60;
+    speed       = 16;
     duration    = 0;
     loops       = 0;
     currentLoop = 0;
@@ -45,7 +45,7 @@ void Animation::start()
     if (!isTimerRunning())
     {
         time = Time::getCurrentTime();
-        startTimerHz(speed);
+        startTimer(speed);
     }
 
     setState(Running);
@@ -63,7 +63,7 @@ void Animation::resume()
     if (getState() == Paused)
     {
         time = Time::getCurrentTime();
-        startTimerHz(speed);
+        startTimer(speed);
     }
 }
 
@@ -160,11 +160,17 @@ void Animation::setSpeed(int ms)
 void Animation::setSpeedHz(int fps)
 {
     speed = 1000 / fps;
+    startTimer(speed);
 }
 
-int Animation::getSpeed()
+int Animation::getSpeed() const
 {
     return speed;
+}
+
+int Animation::getSpeedHz() const
+{
+    return speed / 1000;
 }
 
 //==============================================================================

@@ -88,8 +88,11 @@ public:
     /** Set the frames per second of the animation */
     void setSpeedHz(int fps);
 
-    /** Returns the current frames per second speed of the animation */
-    int getSpeed();
+    /** Returns the current speed of the animation in milliseconds */
+    int getSpeed() const;
+
+    /** Returns the current speed of the animation in Hertz. */
+    int getSpeedHz() const;
 
 	/** Sets the animation's direction
 		@param newDirection			the new direction of the animation
