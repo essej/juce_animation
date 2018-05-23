@@ -44,10 +44,8 @@ void AnimationGroup::removeAnimation(Animation* animation)
 
 Animation* AnimationGroup::removeAnimation(int index)
 {
-
     Animation* animation = animations.removeAndReturn(index);
     return animation;
-
 }
 
 void AnimationGroup::insertAnimation(int index, Animation* animation)
@@ -59,16 +57,12 @@ void AnimationGroup::insertAnimation(int index, Animation* animation)
 
 Animation* AnimationGroup::getAnimation(int index)
 {
-
     return animations[index];
-
 }
 
 int AnimationGroup::getIndexOfAnimation(Animation* animation)
 {
-
     return animations.indexOf(animation);
-
 }
 
 void AnimationGroup::clear()

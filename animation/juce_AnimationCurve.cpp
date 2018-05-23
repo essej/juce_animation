@@ -22,25 +22,19 @@
 
 #include "../utils/PennerEasing.h"
 
-//==============================================================================
-
 AnimationCurve::AnimationCurve()
 {
-
     currentFunction  = Linear;
     currentWeight    = In;
     currentAmplitude = 1.0f;
     currentOvershoot = 0.0f;
     overshootStatus  = true;
-
 }
 
 AnimationCurve::~AnimationCurve()
 {
 
 }
-
-//==============================================================================
 
 void AnimationCurve::setFunction(AnimationCurve::Function newFunction)
 {
@@ -64,7 +58,7 @@ AnimationCurve::Weight AnimationCurve::getWeight() const noexcept
 
 //==============================================================================
 
-// ...
+// Bezier functions
 
 //==============================================================================
 
@@ -98,8 +92,6 @@ bool AnimationCurve::getOvershootStatus() const noexcept
     return overshootStatus;
 }
 
-//==============================================================================
-
 float AnimationCurve::perform(float progress)
 {
     jassert(progress >= 0.0f && progress <= 1.0f);
@@ -109,13 +101,10 @@ float AnimationCurve::perform(float progress)
     switch (currentFunction)
     {
         case Linear:
-
             value = easeNone(progress) * currentAmplitude; // Account for amplitude/overshot?
-
             break;
 
         case Quadratic:
-
             switch (currentWeight)
             {
                 case In:
@@ -138,7 +127,6 @@ float AnimationCurve::perform(float progress)
             break;
 
         case Cubic:
-
             switch (currentWeight)
             {
                 case In:
@@ -157,11 +145,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInCubic(progress);
                     break;
             }
-
             break;
 
         case Quartic:
-
             switch (currentWeight)
             {
                 case In:
@@ -180,11 +166,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInQuart(progress);
                     break;
             }
-
             break;
 
         case Quintic:
-
             switch (currentWeight)
             {
                 case In:
@@ -203,11 +187,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInQuint(progress);
                     break;
             }
-
             break;
 
         case Sinusoidal:
-
             switch (currentWeight)
             {
                 case In:
@@ -226,11 +208,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInSine(progress);
                     break;
             }
-
             break;
 
         case Exponential:
-
             switch (currentWeight)
             {
                 case In:
@@ -249,11 +229,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInExpo(progress);
                     break;
             }
-
             break;
 
         case Circular:
-
             switch (currentWeight)
             {
                 case In:
@@ -272,11 +250,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInCirc(progress);
                     break;
             }
-
             break;
 
         case Elastic:
-
             switch (currentWeight)
             {
                 case In:
@@ -295,11 +271,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInElastic(progress, currentAmplitude, 1.0f);
                     break;
             }
-
             break;
 
         case Back:
-
             switch (currentWeight)
             {
                 case In:
@@ -318,11 +292,9 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInBack(progress, currentOvershoot);
                     break;
             }
-
             break;
 
         case Bounce:
-
             switch (currentWeight)
             {
                 case In:
@@ -341,22 +313,15 @@ float AnimationCurve::perform(float progress)
                     value = easeOutInBounce(progress, currentAmplitude);
                     break;
             }
-
             break;
 
         case Custom:
-
             value = customCurve(progress, currentAmplitude, currentOvershoot, currentWeight);
-
             break;
-
     }
 
     if (!overshootStatus)
-    {
         value = jmax(0.0f, jmin(1.0f, value));
-    }
 
     return value;
-
 }

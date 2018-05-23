@@ -24,14 +24,11 @@
 
 //==============================================================================
 /**
-
 	A base class for animations
-
 */
-class JUCE_API Animation : private Timer
+class Animation : private Timer
 {
 public:
-	//==============================================================================
 	/** */
 	enum State
 	{
@@ -47,14 +44,12 @@ public:
 		Backward
 	};
 
-	//==============================================================================
     /** Creates a basic value animation */
     Animation(var value);
 
 	/** Destructor */
 	virtual ~Animation();
 
-    //==============================================================================
     /** Starts the animation */
     void start();
 
@@ -70,8 +65,8 @@ public:
     /** */
     virtual void update(double progress);
 
-	//==============================================================================
 	/** Explicitly sets the animation state
+
 		@param newState			the state to set the animation to
 	*/
 	void setState(State newState);
@@ -79,13 +74,14 @@ public:
 	/** Returns the animation's current state */
 	State getState() const;
 
-	/** Returns whether the animation is running or not (returns true if paused) */
+	/** Returns whether the animation is running or not. If the animation has
+        started but is currently paused, this method will return true.
+    */
 	bool isRunning() const;
 
 	/** Returns whether the animation is currently paused */
 	bool isPaused() const;
 
-    //==============================================================================
     /** Set the frame speed of the animation */
     void setSpeed(int ms);
 
@@ -95,7 +91,6 @@ public:
     /** Returns the current frames per second speed of the animation */
     int getSpeed();
 
-	//==============================================================================
 	/** Sets the animation's direction
 		@param newDirection			the new direction of the animation
 	*/
@@ -104,14 +99,12 @@ public:
 	/** Returns the animation's current direction */
     Direction getDirection() const;
 
-    //==============================================================================
     /** Sets the animation curve of the animation */
     void setAnimationCurve(AnimationCurve newCurve);
 
     /** Returns a reference to the current AnimationCurve */
     AnimationCurve& getAnimationCurve();
 
-	//==============================================================================
 	/** The number of times the animation should loop before stopping
 		@param loops		the number of times to loop (0 disables the animation, -1 enables endless looping)
 	*/
@@ -132,7 +125,6 @@ public:
     /** Returns whether the animation is infinite */
     bool isEndless() const;
 
-    //==============================================================================
     /** */
     void setStartValue(var value);
 
@@ -159,21 +151,17 @@ public:
     /** Returns the value of a property at a specified keyframe */
     var getKeyValue(double progress) const;
 
-	//==============================================================================
 	/**	A class for receiving callbacks from an Animation.
 
-		To be told when an animation changes, you can register an Animation::Listener
-		object using Animation::addListener().
+		To be told when an animation changes, you can register an
+        Animation::Listener object using Animation::addListener().
 
 		@see Animation::addListener, Animation::removeListener
 	*/
-	class JUCE_API Listener
+	struct Listener
 	{
-	public:
-		//==============================================================================
 		virtual ~Listener() {}
 
-		//==============================================================================
 		/** */
         virtual void animationEnded(Animation*) {}
 
@@ -183,18 +171,14 @@ public:
         /** */
         virtual void animationAdvanced(Animation*) = 0;
 
-		//==============================================================================
 		/** */
 		virtual void animationStateChanged(Animation*) {}
 
-		//==============================================================================
 		/** Called when an animation loop completes */
 		virtual void animationLoopChanged(Animation* animation) {}
 
-		//==============================================================================
 		/** */
 		virtual void animationDirectionChanged(Animation* animation) {}
-
 	};
 
 	/** Adds an AnimationListener to the Animation */
@@ -203,46 +187,57 @@ public:
 	/** Removes an AnimationListener from the Animation */
 	void removeListener(Listener* newListener);
 
-protected:
-    //==============================================================================
-    /** */
-    void setAnimationGroup(AnimationGroup& group);
+    /** You can assign a lambda to this callback object to have it called when
+        the animation begins.
+    */
+    std::function<void()> animationStarted;
 
-    /** */
-    void removeAnimationGroup(AnimationGroup& group);
+    /** You can assign a lambda to this callback object to have it called when
+        the animation ends.
+    */
+    std::function<void()> animationEnded;
 
-    Identifier targetID;
+    /** You can assign a lambda to this callback object to have it called when
+        the animation advances.
+    */
+    std::function<void()> animationAdvanced;
+
+    /** You can assign a lambda to this callback object to have it called when
+        the animation state changes.
+    */
+    std::function<void()> animationStateChanged;
+
+    /** You can assign a lambda to this callback object to have it called when
+        the animation begins a new loop.
+    */
+    std::function<void()> animationLoopChanged;
+
+    /** You can assign a lambda to this callback object to have it called when
+        the animation's direction changes.
+    */
+    std::function<void()> animationDirectionChanged;
 
 private:
-	//==============================================================================
-
-    void animationEnded();
-    void animationStarted();
-    void animationAdvanced();
-    void animationStateChanged();
-    void animationLoopChanged();
-    void animationDirectionChanged();
+    void handleAnimationStarted();
+    void handleAnimationEnded();
+    void handleAnimationAdvanced();
+    void handleAnimationStateChanged();
+    void handleAnimationLoopChanged();
+    void handleAnimationDirectionChanged();
 
     var getNextKeyValue(double progress);
 
-    //==============================================================================
-
     void timerCallback() override;
 
-    //==============================================================================
+    //==========================================================================
 
     int speed;
-
     int duration;
-
     int loops;
-
     int currentLoop;
 
     Direction direction;
-
     State state;
-
     Time time;
 
     var currentValue;
@@ -258,8 +253,5 @@ private:
 
     AnimationCurve curve;
 
-    AnimationGroup* parent;
-
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Animation)
-
 };

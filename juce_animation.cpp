@@ -33,10 +33,7 @@
 
 namespace juce
 {
-
-    #include "animation/juce_AnimationProperties.cpp"
     #include "animation/juce_Animation.cpp"
     #include "animation/juce_AnimationCurve.cpp"
     #include "animation/juce_AnimationGroup.cpp"
-
 }

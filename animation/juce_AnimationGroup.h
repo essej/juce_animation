@@ -24,21 +24,17 @@
 
 //==============================================================================
 /**
-
 	A class for maintaining groups of animations
-
 */
-class JUCE_API AnimationGroup
+class AnimationGroup
 {
 public:
-    //==============================================================================
 	/** */
 	AnimationGroup();
 
 	/** Destructor */
 	~AnimationGroup();
 
-	//==============================================================================
 	/** */
 	void addAnimation(Animation* animation);
 
@@ -60,12 +56,8 @@ public:
 	/** Removes all animations from the group */
 	void clear();
 
-    //==============================================================================
-
 private:
-
     Array<Animation*> animations;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnimationGroup)
-
 };

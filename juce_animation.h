@@ -48,14 +48,11 @@ END_JUCE_MODULE_DECLARATION
 
 namespace juce
 {
-
     class Animation;
     class AnimationGroup;
     class AnimationCurve;
 
-    #include "animation/juce_AnimationProperties.h"
     #include "animation/juce_AnimationCurve.h"
     #include "animation/juce_Animation.h"
     #include "animation/juce_AnimationGroup.h"
-
 }

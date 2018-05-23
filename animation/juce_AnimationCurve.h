@@ -24,14 +24,11 @@
 
 //==============================================================================
 /**
-
-
-
+    
 */
-class JUCE_API AnimationCurve
+class AnimationCurve
 {
 public:
-	//==============================================================================
 	/** Determines how the function is weighted */
 	enum Weight
 	{
@@ -58,16 +55,14 @@ public:
 		Custom
 	};
 
-	//==============================================================================
 	/** */
 	AnimationCurve();
 
 	/** Destructor */
 	virtual ~AnimationCurve();
 
-	//==============================================================================
 	/** */
-	void setFunction(Function newFunction);
+	void setFunction(Function);
 
 	/** */
     Function getFunction() const noexcept;
@@ -78,7 +73,6 @@ public:
     /** */
     Weight getWeight() const noexcept;
 
-	//==============================================================================
 	/** Adjusts the default custom curve using Bezier control points */
 	void setBezier(float controlPoint1X, float controlPoint1Y);
 
@@ -88,7 +82,6 @@ public:
 	/** Override this to make a custom equation */
     virtual float customCurve(float progress, float amplitude, float overshoot, Weight weight) { return progress; }
 
-	//==============================================================================
 	/** Adjusts the amplitude of the current curve */
 	void setAmplitude(float newAmp);
 
@@ -107,15 +100,13 @@ public:
 	/** Returns whether the function is allowed to overshoot */
     bool getOvershootStatus() const noexcept;
 
-	//==============================================================================
+    /** */
 	float perform(float progress);
 
 private:
-	//==============================================================================
     Function currentFunction;
     Weight   currentWeight;
     float    currentAmplitude;
     float    currentOvershoot;
     bool     overshootStatus;
-
 };
