@@ -46,8 +46,17 @@ public:
 		Backward
 	};
 
-    /** Creates a basic value animation */
-    Animation(var value);
+    /** Creates an empty animation */
+    Animation();
+
+    /** Creates an animation with a specified range, duration, loop count, and
+        direction.
+    */
+    Animation(
+        var startValue, var endValue,
+        int duration = 1000, int loops = 1,
+        Direction direction = Forward
+    );
 
 	/** Destructor */
 	virtual ~Animation() {};

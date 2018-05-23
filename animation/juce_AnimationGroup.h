@@ -38,9 +38,6 @@ public:
 	/** Creates an empty animation group. */
 	AnimationGroup();
 
-	/** Destructor */
-	~AnimationGroup();
-
     /** Sets the mode to run the animations in.
 
         When the mode is sequential the group will run all animations, one after

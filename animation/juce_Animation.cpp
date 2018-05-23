@@ -20,21 +20,34 @@
   ==============================================================================
 */
 
-Animation::Animation(var value)
+Animation::Animation()
 {
-    jassert(!value.isVoid());
-
-    setStartValue(value);
-    currentValue = value;
-    setEndValue(value);
-
     speed       = 16;
     duration    = 0;
     loops       = 1;
     currentLoop = 0;
     direction   = Forward;
     state       = Stopped;
-    curve       = AnimationCurve();
+}
+
+Animation::Animation(
+    var startValue, var endValue,
+    int length, int numLoops,
+    Direction dir)
+{
+    jassert(!startValue.isVoid());
+    jassert(!endValue.isVoid());
+
+    setStartValue(startValue);
+    currentValue = startValue;
+    setEndValue(endValue);
+
+    speed       = 16;
+    duration    = length;
+    loops       = numLoops;
+    currentLoop = 0;
+    direction   = dir;
+    state       = Stopped;
 }
 
 void Animation::start()

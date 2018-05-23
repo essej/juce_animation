@@ -20,18 +20,13 @@
  ==============================================================================
  */
 
-AnimationGroup::AnimationGroup() : Animation(juce::var(0.0f))
+AnimationGroup::AnimationGroup()
 {
     setStartValue(0.0f);
     currentValue = 0.0f;
     setEndValue(1.0f);
 
     animationMode = Sequential;
-}
-
-AnimationGroup::~AnimationGroup()
-{
-
 }
 
 void AnimationGroup::setAnimationMode(AnimationGroup::AnimationMode newMode)
