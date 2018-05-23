@@ -89,6 +89,174 @@ void Animation::stop()
     handleAnimationEnded();
 }
 
+void Animation::setState(Animation::State newState)
+{
+    if (newState != state)
+    {
+        state = newState;
+        handleAnimationStateChanged();
+    }
+}
+
+Animation::State Animation::getState() const
+{
+    return state;
+}
+
+bool Animation::isRunning() const
+{
+    return (state == Running || state == Paused);
+}
+
+bool Animation::isPaused() const
+{
+    return (state == Paused);
+}
+
+void Animation::setSpeed(int ms)
+{
+    speed = ms;
+}
+
+void Animation::setSpeedHz(int fps)
+{
+    speed = 1000 / fps;
+    startTimer(speed);
+}
+
+int Animation::getSpeed() const
+{
+    return speed;
+}
+
+int Animation::getSpeedHz() const
+{
+    return speed / 1000;
+}
+
+void Animation::setDirection(Animation::Direction newDirection)
+{
+    if (newDirection != direction)
+    {
+        direction = newDirection;
+
+        // directional stuff
+
+        handleAnimationDirectionChanged();
+    }
+}
+
+Animation::Direction Animation::getDirection() const
+{
+    return direction;
+}
+
+void Animation::setAnimationCurve(const AnimationCurve &newCurve)
+{
+    curve = newCurve;
+}
+
+AnimationCurve& Animation::getAnimationCurve()
+{
+    return curve;
+}
+
+void Animation::setNumLoops(int numloops)
+{
+    loops = numloops;
+}
+
+int Animation::getNumLoops() const
+{
+    return loops;
+}
+
+int Animation::getCurrentLoop() const
+{
+    return currentLoop;
+}
+
+void Animation::setDuration(int msDuration)
+{
+    // Duration must be a positive integer above zero
+    jassert(msDuration > 0);
+    duration = msDuration;
+}
+
+int Animation::getDuration() const
+{
+    return duration;
+}
+
+bool Animation::isEndless() const
+{
+    return (loops == -1);
+}
+
+void Animation::setStartValue(var value)
+{
+    jassert(!value.isVoid());
+    setKeyValue(0.0, value);
+}
+
+var Animation::getStartValue() const
+{
+    return getKeyValue(0.0);
+}
+
+void Animation::setEndValue(var value)
+{
+    jassert(!value.isVoid());
+    setKeyValue(1.0, value);
+}
+
+var Animation::getEndValue() const
+{
+    return getKeyValue(1.0);
+}
+
+var Animation::getCurrentValue() const
+{
+    return currentValue;
+}
+
+void Animation::setKeyValue(double progress, var value)
+{
+    // Keyframe must be in the valid range of 0.0 - 1.0
+    jassert(progress >= 0.0 && progress <= 1.0);
+
+    // No void values!
+    jassert(!value.isVoid());
+
+    keyframes.add(KeyFrame(progress, value));
+}
+
+var Animation::getKeyValue(double progress) const
+{
+    // Keyframe must be in the valid range of 0.0 - 1.0
+    jassert(progress >= 0.0 && progress <= 1.0);
+
+    for (auto keyframe : keyframes)
+        if (keyframe.getPosition() == progress)
+            return keyframe.getValue();
+
+    return var();
+}
+
+void Animation::addListener(Animation::Listener* newListener)
+{
+    if (!listeners.contains(newListener))
+        listeners.add(newListener);
+}
+
+void Animation::removeListener(Animation::Listener* newListener)
+{
+    if (listeners.contains(newListener))
+        listeners.remove(newListener);
+}
+
+//==============================================================================
+
 void Animation::update(double progress)
 {
     const var nextKey = getNextKeyValue(progress);
@@ -141,185 +309,13 @@ void Animation::update(double progress)
 
 //==============================================================================
 
-void Animation::setState(Animation::State newState)
+void Animation::handleAnimationStarted()
 {
-    if (newState != state)
-    {
-        state = newState;
-        handleAnimationStateChanged();
-    }
+    listeners.call(&Animation::Listener::animationStarted, this);
+
+    if (animationStarted)
+        animationStarted();
 }
-
-Animation::State Animation::getState() const
-{
-    return state;
-}
-
-bool Animation::isRunning() const
-{
-    return (state == Running || state == Paused);
-}
-
-bool Animation::isPaused() const
-{
-    return (state == Paused);
-}
-
-//==============================================================================
-
-void Animation::setSpeed(int ms)
-{
-    speed = ms;
-}
-
-void Animation::setSpeedHz(int fps)
-{
-    speed = 1000 / fps;
-    startTimer(speed);
-}
-
-int Animation::getSpeed() const
-{
-    return speed;
-}
-
-int Animation::getSpeedHz() const
-{
-    return speed / 1000;
-}
-
-//==============================================================================
-
-void Animation::setDirection(Animation::Direction newDirection)
-{
-    if (newDirection != direction)
-    {
-        direction = newDirection;
-
-        // directional stuff
-
-        handleAnimationDirectionChanged();
-    }
-}
-
-Animation::Direction Animation::getDirection() const
-{
-    return direction;
-}
-
-//==============================================================================
-
-void Animation::setAnimationCurve(const AnimationCurve &newCurve)
-{
-    curve = newCurve;
-}
-
-AnimationCurve& Animation::getAnimationCurve()
-{
-    return curve;
-}
-
-//==============================================================================
-
-void Animation::setNumLoops(int numloops)
-{
-    loops = numloops;
-}
-
-int Animation::getNumLoops() const
-{
-    return loops;
-}
-
-int Animation::getCurrentLoop() const
-{
-    return currentLoop;
-}
-
-void Animation::setDuration(int msDuration)
-{
-    // Duration must be a positive integer above zero
-    jassert(msDuration > 0);
-    duration = msDuration;
-}
-
-int Animation::getDuration() const
-{
-    return duration;
-}
-
-bool Animation::isEndless() const
-{
-    return (loops == -1);
-}
-
-//==============================================================================
-
-void Animation::setStartValue(var value)
-{
-    jassert(!value.isVoid());
-    setKeyValue(0.0, value);
-}
-
-var Animation::getStartValue() const
-{
-    return getKeyValue(0.0);
-}
-
-void Animation::setEndValue(var value)
-{
-    jassert(!value.isVoid());
-    setKeyValue(1.0, value);
-}
-
-var Animation::getEndValue() const
-{
-    return getKeyValue(1.0);
-}
-
-var Animation::getCurrentValue() const
-{
-    return currentValue;
-}
-
-void Animation::setKeyValue(double progress, var value)
-{
-    // Keyframe must be in the valid range of 0.0 - 1.0
-    jassert(progress >= 0.0 && progress <= 1.0);
-
-    // No void values!
-    jassert(!value.isVoid());
-
-    keyframes.add(KeyFrame(progress, value));
-}
-
-var Animation::getKeyValue(double progress) const
-{
-    // Keyframe must be in the valid range of 0.0 - 1.0
-    jassert(progress >= 0.0 && progress <= 1.0);
-
-    for (auto keyframe : keyframes)
-        if (keyframe.getPosition() == progress)
-            return keyframe.getValue();
-
-    return var();
-}
-
-//==============================================================================
-
-void Animation::addListener(Animation::Listener* newListener)
-{
-    if (!listeners.contains(newListener))
-        listeners.add(newListener);
-}
-
-void Animation::removeListener(Animation::Listener* newListener)
-{
-    if (listeners.contains(newListener))
-        listeners.remove(newListener);
-}
-
-//==============================================================================
 
 void Animation::handleAnimationEnded()
 {
@@ -327,14 +323,6 @@ void Animation::handleAnimationEnded()
 
     if (animationEnded)
         animationEnded();
-}
-
-void Animation::handleAnimationStarted()
-{
-    listeners.call(&Animation::Listener::animationStarted, this);
-
-    if (animationStarted)
-        animationStarted();
 }
 
 void Animation::handleAnimationAdvanced()
