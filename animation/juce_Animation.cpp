@@ -30,7 +30,7 @@ Animation::Animation(var value)
 
     speed       = 16;
     duration    = 0;
-    loops       = 0;
+    loops       = 1;
     currentLoop = 0;
     direction   = Forward;
     state       = Stopped;

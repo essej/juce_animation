@@ -28,6 +28,8 @@
 */
 class Animation : private Timer
 {
+    friend class AnimationGroup;
+
 public:
 	/** */
 	enum State
@@ -61,9 +63,6 @@ public:
 
     /** Stops the animation */
     void stop();
-
-    /** */
-    virtual void update(double progress);
 
 	/** Explicitly sets the animation state
 
@@ -219,6 +218,12 @@ public:
         the animation's direction changes.
     */
     std::function<void()> animationDirectionChanged;
+
+protected:
+    /** Called when the animation advances. This can be overriden to provide
+        custom behavior for the animation.
+    */
+    virtual void update(double progress);
 
 private:
     void handleAnimationStarted();

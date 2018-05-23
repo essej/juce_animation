@@ -20,9 +20,13 @@
  ==============================================================================
  */
 
-AnimationGroup::AnimationGroup()
+AnimationGroup::AnimationGroup() : Animation(juce::var(0.0f))
 {
+    setStartValue(0.0f);
+    currentValue = 0.0f;
+    setEndValue(1.0f);
 
+    animationMode = Sequential;
 }
 
 AnimationGroup::~AnimationGroup()
@@ -30,29 +34,76 @@ AnimationGroup::~AnimationGroup()
 
 }
 
-//==============================================================================
+void AnimationGroup::setAnimationMode(AnimationGroup::AnimationMode newMode)
+{
+    animationMode = newMode;
+}
+
+AnimationMode AnimationGroup::getAnimationMode() const
+{
+    return animationMode;
+}
 
 void AnimationGroup::addAnimation(Animation* animation)
 {
+    animations.add(animation);
 
+    for (auto listener : listeners)
+        animation->addListener(listener);
+
+    if (animation->getDuration() > duration)
+        duration = animation->getDuration();
 }
 
 void AnimationGroup::removeAnimation(Animation* animation)
 {
-
+    animations.remove(&animation);
 }
 
-Animation* AnimationGroup::removeAnimation(int index)
+void AnimationGroup::removeAnimation(int index)
 {
-    Animation* animation = animations.removeAndReturn(index);
-    return animation;
+    animations.remove(index);
 }
 
 void AnimationGroup::insertAnimation(int index, Animation* animation)
 {
+    if (animations.contains(animation))
+        animations.remove(&animation);
 
+    for (auto listener : listeners)
+        animation->addListener(listener);
 
+    animations.insert(index, animation);
 
+    if (animation->getDuration() > duration)
+        duration = animation->getDuration();
+}
+
+void AnimationGroup::swapAnimations(Animation *firstAnimation, Animation *secondAnimation)
+{
+    if (firstAnimation == secondAnimation)
+        return;
+
+    jassert(animations.contains(firstAnimation));
+    jassert(animations.contains(secondAnimation));
+
+    const int indexOne = animations.indexOf(firstAnimation);
+    const int indexTwo = animations.indexOf(secondAnimation);
+
+    animations.swap(indexOne, indexTwo);
+}
+
+void AnimationGroup::swapAnimations(int indexOne, int indexTwo)
+{
+    animations.swap(indexOne, indexTwo);
+}
+
+void AnimationGroup::moveAnimation(Animation *animation, int newIndex)
+{
+    jassert(animations.contains(animation));
+
+    const int index = animations.indexOf(animation);
+    animations.move(index, newIndex);
 }
 
 Animation* AnimationGroup::getAnimation(int index)
@@ -67,7 +118,29 @@ int AnimationGroup::getIndexOfAnimation(Animation* animation)
 
 void AnimationGroup::clear()
 {
-
+    stop();
+    animations.clear();
 }
 
-//==============================================================================
+void AnimationGroup::addListener(Animation::Listener *listener)
+{
+    for (auto animation : animations)
+        animation->addListener(listener);
+
+    listeners.addIfNotAlreadyThere(listener);
+}
+
+void AnimationGroup::removeListener(Animation::Listener *listener)
+{
+    for (auto animation : animations)
+        animation->removeListener(listener);
+
+    listeners.remove(&listener);
+}
+
+void AnimationGroup::update(double progress)
+{
+    // TODO: Implement animation mode
+    for (auto animation : animations)
+        animation->update(progress);
+}
