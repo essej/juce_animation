@@ -228,6 +228,11 @@ void Animation::setKeyValue(double progress, var value)
     // No void values!
     jassert(!value.isVoid());
 
+    if (progress == 0.0)
+        startValue = value;
+    else if (progress == 1.0)
+        endValue = value;
+
     keyframes.add(KeyFrame(progress, value));
 }
 
