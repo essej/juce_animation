@@ -48,7 +48,7 @@ public:
     Animation(var value);
 
 	/** Destructor */
-	virtual ~Animation();
+	virtual ~Animation() {};
 
     /** Starts the animation */
     void start();
@@ -100,7 +100,7 @@ public:
     Direction getDirection() const;
 
     /** Sets the animation curve of the animation */
-    void setAnimationCurve(AnimationCurve newCurve);
+    void setAnimationCurve(const AnimationCurve& newCurve);
 
     /** Returns a reference to the current AnimationCurve */
     AnimationCurve& getAnimationCurve();
@@ -125,19 +125,19 @@ public:
     /** Returns whether the animation is infinite */
     bool isEndless() const;
 
-    /** */
+    /** Sets the starting value of the animation. */
     void setStartValue(var value);
 
-    /** */
+    /** Returns the value set by setStartValue(). */
     var getStartValue() const;
 
-    /** */
+    /** Sets the end value of the animation. */
     void setEndValue(var value);
 
-    /** */
+    /** Returns the value set by setEndValue() */
     var getEndValue() const;
 
-    /** */
+    /** Returns the current value the animation is at. */
     var getCurrentValue() const;
 
     /** Sets the value of a property at a specified keyframe */
@@ -162,22 +162,22 @@ public:
 	{
 		virtual ~Listener() {}
 
-		/** */
-        virtual void animationEnded(Animation*) {}
-
-		/** */
+		/** Called when an animation begins. */
 		virtual void animationStarted(Animation*) {}
 
-        /** */
+        /** Called when an animation ends. */
+        virtual void animationEnded(Animation*) {}
+
+        /** Called when an animation advances. */
         virtual void animationAdvanced(Animation*) = 0;
 
-		/** */
+		/** Called when an animation's state changes. */
 		virtual void animationStateChanged(Animation*) {}
 
-		/** Called when an animation loop completes */
+		/** Called when an animation loop completes. */
 		virtual void animationLoopChanged(Animation* animation) {}
 
-		/** */
+		/** Called when an animation's direction changes. */
 		virtual void animationDirectionChanged(Animation* animation) {}
 	};
 

@@ -22,6 +22,8 @@
 
 Animation::Animation(var value)
 {
+    jassert(!value.isVoid());
+
     setStartValue(value);
     currentValue = value;
     setEndValue(value);
@@ -33,11 +35,6 @@ Animation::Animation(var value)
     direction   = Forward;
     state       = Stopped;
     curve       = AnimationCurve();
-}
-
-Animation::~Animation()
-{
-    
 }
 
 void Animation::start()
@@ -191,7 +188,7 @@ Animation::Direction Animation::getDirection() const
 
 //==============================================================================
 
-void Animation::setAnimationCurve(AnimationCurve newCurve)
+void Animation::setAnimationCurve(const AnimationCurve &newCurve)
 {
     curve = newCurve;
 }
@@ -239,6 +236,7 @@ bool Animation::isEndless() const
 
 void Animation::setStartValue(var value)
 {
+    jassert(!value.isVoid());
     setKeyValue(0.0, value);
 }
 
@@ -249,6 +247,7 @@ var Animation::getStartValue() const
 
 void Animation::setEndValue(var value)
 {
+    jassert(!value.isVoid());
     setKeyValue(1.0, value);
 }
 
@@ -266,6 +265,8 @@ void Animation::setKeyValue(double progress, var value)
 {
     // Keyframe must be in the valid range of 0.0 - 1.0
     jassert(progress >= 0.0 && progress <= 1.0);
+
+    jassert(!value.isVoid());
 
     progress = floorf(progress * 100.0);
     keyValues.set((int)progress, value);
