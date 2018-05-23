@@ -39,7 +39,7 @@ void AnimationGroup::setAnimationMode(AnimationGroup::AnimationMode newMode)
     animationMode = newMode;
 }
 
-AnimationMode AnimationGroup::getAnimationMode() const
+AnimationGroup::AnimationMode AnimationGroup::getAnimationMode() const
 {
     return animationMode;
 }
