@@ -355,7 +355,7 @@ void Animation::handleAnimationDirectionChanged()
 
 var Animation::getNextKeyValue(double progress)
 {
-    for(HashMap<int, var>::Iterator i (keyValues); i.next();)
+    for (HashMap<int, var>::Iterator i (keyValues); i.next();)
     {
         if (i.getKey() > (int)floorf(progress * 100))
             return i.getValue();
@@ -368,7 +368,7 @@ var Animation::getNextKeyValue(double progress)
 
 void Animation::timerCallback()
 {
-    int64 diff = Time::getCurrentTime().toMilliseconds() - time.toMilliseconds();
+    auto diff = Time::getCurrentTime().toMilliseconds() - time.toMilliseconds();
 
     if (diff > (int64)duration)
     {

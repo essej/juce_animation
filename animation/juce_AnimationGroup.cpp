@@ -79,7 +79,9 @@ void AnimationGroup::insertAnimation(int index, Animation* animation)
         duration = animation->getDuration();
 }
 
-void AnimationGroup::swapAnimations(Animation *firstAnimation, Animation *secondAnimation)
+void AnimationGroup::swapAnimations(
+    Animation *firstAnimation,
+    Animation *secondAnimation)
 {
     if (firstAnimation == secondAnimation)
         return;

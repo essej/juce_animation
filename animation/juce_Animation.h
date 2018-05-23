@@ -145,7 +145,7 @@ public:
     /** Sets the value of a property at a specified keyframe */
     void setKeyValue(double progress, var value);
 
-        // This should be adding to some queue that keeps track of what the targets are for the current animation time
+    // This should be adding to some queue that keeps track of what the targets are for the current animation time
 
     /** */
 //    void setKeyValueMs(Identifier Id, double msProgress, Value value);

@@ -26,87 +26,87 @@
 /**
     
 */
-class AnimationCurve
+struct AnimationCurve
 {
-public:
 	/** Determines how the function is weighted */
 	enum Weight
 	{
+        /** Accelerating from zero. */
 		In,
+
+        /** Decelerating to zero. */
 		Out,
+
+        /** Acceleration halfway, then deceleration. */
 		InOut,
+
+        /** Deceleration halfway, then acceleration. */
 		OutIn,
 	};
 
-	/** Function presets */
+	/** Curve functions to apply to an animation's value. */
 	enum Function
 	{
+        /** No easing, linear tween. */
 		Linear,
+
+        /** Quadratic easing (t^2). */
 		Quadratic,
+
+        /** Cubic easing (t^3). */
 		Cubic,
+
+        /** Quartic easing (t^4). */
 		Quartic,
+
+        /** Quintic easing (t^5). */
 		Quintic,
+
+        /** Sinusoidal easing (sin(t)). */
 		Sinusoidal,
+
+        /** Exponential easing (2^t). */
 		Exponential,
+
+        /** Circular easing (sqrt(1-t^2)). */
 		Circular,
+
+        /** Elastic easing (exponentially decaying sinusoid). */
 		Elastic,
+
+        /** Back easing (overshoot cubic: (s+1)*t^3 - s*t^2). */
 		Back,
-		Bounce,
-		Custom
+
+        /** Bounce easing (exponentially decaying parabola). */
+		Bounce
 	};
 
-	/** */
+	/** Creates a default AnimationCurve (Linear function, In weighting, 1.0
+        amplitude, 0.0 overshoot, and clipping off).
+    */
 	AnimationCurve();
 
-	/** Destructor */
-	virtual ~AnimationCurve();
+    /** Destructor. */
+    virtual ~AnimationCurve() {};
 
-	/** */
-	void setFunction(Function);
+    /** Manipulates the input value by the curve's function.
 
-	/** */
-    Function getFunction() const noexcept;
+        This can be overriden to provide a custom curve
+    */
+	virtual float perform(float progress);
 
-    /** */
-    void setWeight(Weight newWeight);
+    /** The curve function to apply to the animation. */
+    Function function;
 
-    /** */
-    Weight getWeight() const noexcept;
+    /** The function weighting to apply to the animation. */
+    Weight   weight;
 
-	/** Adjusts the default custom curve using Bezier control points */
-	void setBezier(float controlPoint1X, float controlPoint1Y);
+    /** The curve amplitude to apply to the animation. */
+    float    amplitude;
 
-	/** */
-	void setBezier(float controlPoint1X, float controlPoint1Y, float controlPoint2X, float controlPoint2Y);
+    /** The curve overshoot to apply to the animation. */
+    float    overshoot;
 
-	/** Override this to make a custom equation */
-    virtual float customCurve(float progress, float amplitude, float overshoot, Weight weight) { return progress; }
-
-	/** Adjusts the amplitude of the current curve */
-	void setAmplitude(float newAmp);
-
-	/** Returns the amplitude multiplier applied to the current curve */
-    float getAmplitude() const noexcept;
-
-    /** */
-    void setOvershoot(float newOvershoot);
-
-    /** */
-    float getOvershoot() const noexcept;
-
-	/** Determines whether or not to clip the curve to 0-1, even if the function were to extend past */
-	void setOvershootStatus(bool allowedToOvershoot);
-
-	/** Returns whether the function is allowed to overshoot */
-    bool getOvershootStatus() const noexcept;
-
-    /** */
-	float perform(float progress);
-
-private:
-    Function currentFunction;
-    Weight   currentWeight;
-    float    currentAmplitude;
-    float    currentOvershoot;
-    bool     overshootStatus;
+    /** Whether or not to clip overshooting. */
+    bool     clipValue;
 };
