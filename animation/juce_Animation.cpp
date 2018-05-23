@@ -52,8 +52,8 @@ Animation::Animation(
 
 void Animation::start()
 {
-    keyStart = getStartValue();
-    keyEnd   = getNextKeyValue(0.0);
+    keyStart = {0.0, getStartValue()};
+    keyEnd   = getNextKeyFrame(0.0);
 
     if (!isTimerRunning())
     {
@@ -229,9 +229,9 @@ void Animation::setKeyValue(double progress, var value)
     jassert(!value.isVoid());
 
     if (progress == 0.0)
-        startValue = value;
+        startKeyframe = KeyFrame(0.0, value);
     else if (progress == 1.0)
-        endValue = value;
+        endKeyframe = KeyFrame(1.0, value);
 
     keyframes.add(KeyFrame(progress, value));
 }
@@ -264,49 +264,45 @@ void Animation::removeListener(Animation::Listener* newListener)
 
 void Animation::update(double progress)
 {
-    const var nextKey = getNextKeyValue(progress);
+    const KeyFrame &nextKey = getNextKeyFrame(progress);
 
-    if (keyEnd != nextKey)
+    if (keyEnd.getValue() != nextKey.getValue())
     {
         keyStart = keyEnd;
         keyEnd   = nextKey;
     }
 
-    progress = curve.perform(progress);
+    double keyProgress = jmap(
+        progress, keyStart.getPosition(), keyEnd.getPosition(),
+        0.0, 1.0
+    );
+
+    keyProgress = curve.perform(keyProgress);
 
     if (currentValue.isInt())
     {
-        int v1 = (int)keyStart;
-        int v2 = (int)keyEnd;
-
-        var result = v1 + (v2 - v1) * progress;
-
-        currentValue = result;
+        int v1 = (int)keyStart.getValue();
+        int v2 = (int)keyEnd.getValue();
+        currentValue = v1 + (v2 - v1) * keyProgress;
     }
     else if (currentValue.isInt64())
     {
-        int64 v1 = (int64)keyStart;
-        int64 v2 = (int64)keyEnd;
-
-        var result = v1 + (v2 - v1) * progress;
-
-        currentValue = result;
+        int64 v1 = (int64)keyStart.getValue();
+        int64 v2 = (int64)keyEnd.getValue();
+        currentValue = v1 + (v2 - v1) * keyProgress;
     }
     else if (currentValue.isDouble())
     {
-        int v1 = (double)keyStart;
-        int v2 = (double)keyEnd;
-
-        var result = v1 + (v2 - v1) * progress;
-
-        currentValue = result;
+        int v1 = (double)keyStart.getValue();
+        int v2 = (double)keyEnd.getValue();
+        currentValue = v1 + (v2 - v1) * keyProgress;
     }
     else
     {
         if (progress == 1.0)
-            currentValue = keyEnd;
+            currentValue = keyEnd.getValue();
         else
-            currentValue = keyStart;
+            currentValue = keyStart.getValue();
     }
 
     handleAnimationAdvanced();
@@ -362,18 +358,14 @@ void Animation::handleAnimationDirectionChanged()
         animationDirectionChanged();
 }
 
-//==============================================================================
-
-var Animation::getNextKeyValue(double progress)
+KeyFrame Animation::getNextKeyFrame(double progress)
 {
     for (auto keyframe : keyframes)
         if (keyframe.getPosition() > progress)
-            return keyframe.getValue();
+            return keyframe;
 
-    return endValue;
+    return endKeyframe;
 }
-
-//==============================================================================
 
 void Animation::timerCallback()
 {
@@ -385,8 +377,8 @@ void Animation::timerCallback()
         {
             time = Time::getCurrentTime();
 
-            keyStart = getStartValue();
-            keyEnd   = getNextKeyValue(0.0);
+            keyStart = {0.0, getStartValue()};
+            keyEnd   = getNextKeyFrame(0.0);
 
             update(0.0);
 

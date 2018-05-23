@@ -152,12 +152,7 @@ public:
     var getCurrentValue() const;
 
     /** Sets the value of a property at a specified keyframe */
-    void setKeyValue(double progress, var value);
-
-    // This should be adding to some queue that keeps track of what the targets are for the current animation time
-
-    /** */
-//    void setKeyValueMs(Identifier Id, double msProgress, Value value);
+    void setKeyValue(double, var);
 
     /** Returns the value of a property at a specified keyframe */
     var getKeyValue(double progress) const;
@@ -242,7 +237,7 @@ private:
     void handleAnimationLoopChanged();
     void handleAnimationDirectionChanged();
 
-    var getNextKeyValue(double progress);
+    KeyFrame getNextKeyFrame(double progress);
 
     void timerCallback() override;
 
@@ -258,11 +253,12 @@ private:
     Time time;
 
     var currentValue;
-    var startValue;
-    var endValue;
 
-    var keyStart;
-    var keyEnd;
+    // TODO: Better names for these
+    KeyFrame startKeyframe;
+    KeyFrame endKeyframe;
+    KeyFrame keyStart;
+    KeyFrame keyEnd;
 
     ListenerList<Animation::Listener> listeners;
 

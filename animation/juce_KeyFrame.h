@@ -28,12 +28,14 @@
 */
 struct KeyFrame
 {
+    /** Creates an empty keyframe at position 0.0. */
+    KeyFrame() : position(0.0), value() {}
+
     /** Creates a keyframe for a value at a given position. */
     KeyFrame(double p, juce::var v) : position(p), value(v) {}
 
     KeyFrame operator=(const KeyFrame &k)
     {
-        jassert(value.hasSameTypeAs(k.value));
         position = k.position;
         value    = k.value;
         return *this;
