@@ -52,6 +52,7 @@ namespace juce
     class AnimationGroup;
     class AnimationCurve;
 
+    #include "animation/juce_KeyFrame.h"
     #include "animation/juce_AnimationCurve.h"
     #include "animation/juce_Animation.h"
     #include "animation/juce_AnimationGroup.h"

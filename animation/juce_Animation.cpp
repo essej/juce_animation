@@ -78,10 +78,12 @@ void Animation::stop()
 
 void Animation::update(double progress)
 {
-    if (keyEnd != getNextKeyValue(progress))
+    const var nextKey = getNextKeyValue(progress);
+
+    if (keyEnd != nextKey)
     {
         keyStart = keyEnd;
-        keyEnd = getNextKeyValue(progress);
+        keyEnd   = nextKey;
     }
 
     progress = curve.perform(progress);
@@ -272,10 +274,10 @@ void Animation::setKeyValue(double progress, var value)
     // Keyframe must be in the valid range of 0.0 - 1.0
     jassert(progress >= 0.0 && progress <= 1.0);
 
+    // No void values!
     jassert(!value.isVoid());
 
-    progress = floorf(progress * 100.0);
-    keyValues.set((int)progress, value);
+    keyframes.add(KeyFrame(progress, value));
 }
 
 var Animation::getKeyValue(double progress) const
@@ -283,8 +285,11 @@ var Animation::getKeyValue(double progress) const
     // Keyframe must be in the valid range of 0.0 - 1.0
     jassert(progress >= 0.0 && progress <= 1.0);
 
-    progress = floorf(progress * 100.0);
-    return keyValues[(int)progress];
+    for (auto keyframe : keyframes)
+        if (keyframe.getPosition() == progress)
+            return keyframe.getValue();
+
+    return var();
 }
 
 //==============================================================================
@@ -355,11 +360,9 @@ void Animation::handleAnimationDirectionChanged()
 
 var Animation::getNextKeyValue(double progress)
 {
-    for (HashMap<int, var>::Iterator i (keyValues); i.next();)
-    {
-        if (i.getKey() > (int)floorf(progress * 100))
-            return i.getValue();
-    }
+    for (auto keyframe : keyframes)
+        if (keyframe.getPosition() > progress)
+            return keyframe.getValue();
 
     return endValue;
 }

@@ -257,7 +257,7 @@ private:
 
     ListenerList<Animation::Listener> listeners;
 
-    HashMap<int, var> keyValues;
+    SortedSet<KeyFrame> keyframes;
 
     AnimationCurve curve;
 
