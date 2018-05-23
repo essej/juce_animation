@@ -40,8 +40,6 @@ Animation::~Animation()
     
 }
 
-//==============================================================================
-
 void Animation::start()
 {
     keyStart = getStartValue();
@@ -95,6 +93,15 @@ void Animation::update(double progress)
     {
         int v1 = (int)keyStart;
         int v2 = (int)keyEnd;
+
+        var result = v1 + (v2 - v1) * progress;
+
+        currentValue = result;
+    }
+    else if (currentValue.isInt64())
+    {
+        int64 v1 = (int64)keyStart;
+        int64 v2 = (int64)keyEnd;
 
         var result = v1 + (v2 - v1) * progress;
 
