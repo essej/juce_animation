@@ -52,8 +52,16 @@ Animation::Animation(
 
 void Animation::start()
 {
-    animationStartKey = {0.0, getStartValue()};
-    animationEndKey   = getNextKeyFrame(0.0);
+    if (direction == Forward)
+    {
+        animationStartKey = {0.0, getStartValue()};
+        animationEndKey   = getNextKeyFrame(0.0);
+    }
+    else
+    {
+        animationStartKey = {1.0, getEndValue()};
+        animationEndKey   = getNextKeyFrame(1.0);
+    }
 
     if (!isTimerRunning())
     {
@@ -259,7 +267,7 @@ void Animation::removeListener(Animation::Listener* newListener)
 
 //==============================================================================
 
-void Animation::update(double progress)
+void Animation::update(const double progress)
 {
     const KeyFrame &nextKey = getNextKeyFrame(progress);
 
@@ -270,10 +278,13 @@ void Animation::update(double progress)
     }
 
     double keyProgress = jmap(
-        progress, animationStartKey.getPosition(), animationEndKey.getPosition(),
-        0.0, 1.0
+        progress,
+        animationStartKey.getPosition(),
+        animationEndKey.getPosition(),
+        0.0,
+        1.0
     );
-
+    keyProgress = juce::jlimit(0.0, 1.0, keyProgress);
     keyProgress = curve.perform(keyProgress);
 
     if (currentValue.isInt())
@@ -355,11 +366,23 @@ void Animation::handleAnimationDirectionChanged()
         animationDirectionChanged();
 }
 
-KeyFrame Animation::getNextKeyFrame(double progress)
+KeyFrame Animation::getNextKeyFrame(const double progress) const
 {
-    for (auto keyframe : keyframes)
-        if (keyframe.getPosition() > progress)
-            return keyframe;
+    if (direction == Forward)
+    {
+        for (auto keyframe : keyframes)
+            if (keyframe.getPosition() > progress)
+                return keyframe;
+    }
+    else
+    {
+        for (int i = keyframes.size() - 1; i > 0; --i)
+        {
+            const auto keyframe = keyframes[i];
+            if (keyframe.getPosition() < progress)
+                return keyframe;
+        }
+    }
 
     return currentKeyEnd;
 }
@@ -367,8 +390,7 @@ KeyFrame Animation::getNextKeyFrame(double progress)
 void Animation::timerCallback()
 {
     const auto currentTime = Time::getCurrentTime();
-
-    auto diff = currentTime.toMilliseconds() - time.toMilliseconds();
+    const auto diff = currentTime.toMilliseconds() - time.toMilliseconds();
 
     if (diff > (int64)duration)
     {
@@ -376,22 +398,40 @@ void Animation::timerCallback()
         {
             time = currentTime;
 
-            animationStartKey = {0.0, getStartValue()};
-            animationEndKey   = getNextKeyFrame(0.0);
+            if (direction == Forward)
+            {
+                animationStartKey = {0.0, getStartValue()};
+                animationEndKey   = getNextKeyFrame(0.0);
 
-            update(0.0);
+                update(0.0);
+            }
+            else
+            {
+                animationStartKey = {1.0, getEndValue()};
+                animationEndKey   = getNextKeyFrame(1.0);
+
+                update(1.0);
+            }
 
             currentLoop++;
         }
         else
         {
-            update(1.0);
+            if (direction == Forward)
+                update(1.0);
+            else
+                update(0.0);
+
             stop();
         }
     }
     else
     {
-        double progress = (double)diff / (double)duration;
-        update(progress);
+        const double progress = (double)diff / (double)duration;
+
+        if (direction == Forward)
+            update(progress);
+        else
+            update(1.0 - progress);
     }
 }

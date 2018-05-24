@@ -227,7 +227,7 @@ protected:
     /** Called when the animation advances. This can be overriden to provide
         custom behavior for the animation.
     */
-    virtual void update(double progress);
+    virtual void update(const double progress);
 
 private:
     void handleAnimationStarted();
@@ -237,7 +237,7 @@ private:
     void handleAnimationLoopChanged();
     void handleAnimationDirectionChanged();
 
-    KeyFrame getNextKeyFrame(double progress);
+    KeyFrame getNextKeyFrame(const double progress) const;
 
     void timerCallback() override;
 

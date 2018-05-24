@@ -102,7 +102,7 @@ public:
     void removeListener(Animation::Listener*);
 
 private:
-    void update(double progress) override;
+    void update(const double progress) override;
 
     Array<Animation*> animations;
     Array<Animation::Listener*> listeners;

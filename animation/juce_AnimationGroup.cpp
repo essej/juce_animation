@@ -135,9 +135,14 @@ void AnimationGroup::removeListener(Animation::Listener *listener)
     listeners.remove(&listener);
 }
 
-void AnimationGroup::update(double progress)
+void AnimationGroup::update(const double progress)
 {
     // TODO: Implement animation mode
     for (auto animation : animations)
-        animation->update(progress);
+    {
+        if (animation->direction == Forward)
+            animation->update(progress);
+        else
+            animation->update(1.0 - progress);
+    }
 }
