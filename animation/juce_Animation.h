@@ -252,13 +252,11 @@ private:
     State state;
     Time time;
 
-    var currentValue;
-
-    // TODO: Better names for these
-    KeyFrame startKeyframe;
-    KeyFrame endKeyframe;
-    KeyFrame keyStart;
-    KeyFrame keyEnd;
+    var      currentValue;
+    KeyFrame currentKeyStart;
+    KeyFrame currentKeyEnd;
+    KeyFrame animationStartKey;
+    KeyFrame animationEndKey;
 
     ListenerList<Animation::Listener> listeners;
 

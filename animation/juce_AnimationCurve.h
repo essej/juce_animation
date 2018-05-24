@@ -104,7 +104,10 @@ struct AnimationCurve
     /** The curve amplitude to apply to the animation. */
     float    amplitude;
 
-    /** The curve overshoot to apply to the animation. */
+    /** The curve overshoot to apply to the animation.
+
+        NOTE: Only Function::Back supports overshooting.
+    */
     float    overshoot;
 
     /** Whether or not to clip overshooting. */
