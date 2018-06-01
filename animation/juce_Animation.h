@@ -133,6 +133,14 @@ public:
 	/** Returns the current loop number the animation is on */
 	int getCurrentLoop() const;
 
+    /** When enabled, the animation will switch directions after it completes
+        a loop.
+    */
+    void setPingPongMode(bool shouldPingPong);
+
+    /** Returns whether ping-pong has been enabled. */
+    bool getPingPongMode() const;
+
 	/** Sets the length of the animation in milliseconds*/
 	void setDuration(int msDuration);
 
@@ -253,6 +261,8 @@ private:
     int duration;
     int loops;
     int currentLoop;
+
+    bool pingPong;
 
     Direction direction;
     State state;

@@ -28,6 +28,8 @@ Animation::Animation()
     currentLoop = 0;
     direction   = Forward;
     state       = Stopped;
+
+    pingPong = false;
 }
 
 Animation::Animation(
@@ -48,6 +50,8 @@ Animation::Animation(
     currentLoop = 0;
     direction   = dir;
     state       = Stopped;
+
+    pingPong = false;
 }
 
 void Animation::start()
@@ -184,6 +188,16 @@ int Animation::getNumLoops() const
 int Animation::getCurrentLoop() const
 {
     return currentLoop;
+}
+
+void Animation::setPingPongMode(bool shouldPingPong)
+{
+    pingPong = shouldPingPong;
+}
+
+bool Animation::getPingPongMode() const
+{
+    return pingPong;
 }
 
 void Animation::setDuration(int msDuration)
@@ -402,6 +416,9 @@ void Animation::timerCallback()
         if (currentLoop < loops - 1 || isEndless())
         {
             time = currentTime;
+
+            if (pingPong)
+                direction = (direction == Forward) ? Backward : Forward;
 
             if (direction == Forward)
             {
