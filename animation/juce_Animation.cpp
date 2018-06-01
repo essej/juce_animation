@@ -124,12 +124,17 @@ bool Animation::isPaused() const
 void Animation::setSpeed(int ms)
 {
     speed = ms;
+
+    if (isTimerRunning())
+        startTimer(speed);
 }
 
 void Animation::setSpeedHz(int fps)
 {
     speed = 1000 / fps;
-    startTimer(speed);
+
+    if (isTimerRunning())
+        startTimer(speed);
 }
 
 int Animation::getSpeed() const
@@ -139,7 +144,7 @@ int Animation::getSpeed() const
 
 int Animation::getSpeedHz() const
 {
-    return speed / 1000;
+    return 1000 / speed;
 }
 
 void Animation::setDirection(Animation::Direction newDirection)

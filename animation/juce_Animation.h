@@ -93,13 +93,19 @@ public:
     /** Set the frame speed of the animation */
     void setSpeed(int ms);
 
-    /** Set the frames per second of the animation */
+    /** Set the frames per second of the animation.
+
+        Note that this may not be exact due to integer rounding.
+    */
     void setSpeedHz(int fps);
 
     /** Returns the current speed of the animation in milliseconds */
     int getSpeed() const;
 
-    /** Returns the current speed of the animation in Hertz. */
+    /** Returns the current speed of the animation in Hertz.
+
+        Note that this may not be exact due to integer rounding.
+    */
     int getSpeedHz() const;
 
 	/** Sets the animation's direction
