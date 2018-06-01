@@ -261,8 +261,6 @@ private:
     var      currentValue;
     KeyFrame currentKeyStart;
     KeyFrame currentKeyEnd;
-    KeyFrame animationStartKey;
-    KeyFrame animationEndKey;
 
     ListenerList<Animation::Listener> listeners;
 
