@@ -24,42 +24,33 @@
 
 //==============================================================================
 /**
-	A base class for animations
+    An abstract base class for timer based animations.
 */
 class Animation : private Timer
 {
     friend class AnimationGroup;
 
 public:
-	/** */
-	enum State
-	{
-		Stopped,
-		Paused,
-		Running
-	};
+    /** */
+    enum State
+    {
+        Stopped,
+        Paused,
+        Running
+    };
 
-	/** */
-	enum Direction
-	{
-		Forward,
-		Backward
-	};
+    /** */
+    enum Direction
+    {
+        Forward,
+        Backward
+    };
 
-    /** Creates an empty animation */
+     /** Creates an empty animation */
     Animation();
 
-    /** Creates an animation with a specified range, duration, loop count, and
-        direction.
-    */
-    Animation(
-        var startValue, var endValue,
-        int duration = 1000, int loops = 1,
-        Direction direction = Forward
-    );
-
-	/** Destructor */
-	virtual ~Animation() {};
+    /** Destructor */
+    virtual ~Animation() {};
 
     /** Starts the animation */
     void start();
@@ -73,22 +64,22 @@ public:
     /** Stops the animation */
     void stop();
 
-	/** Explicitly sets the animation state
+    /** Explicitly sets the animation state
 
-		@param newState			the state to set the animation to
-	*/
-	void setState(State newState);
+        @param newState            the state to set the animation to
+    */
+    void setState(State newState);
 
-	/** Returns the animation's current state */
-	State getState() const;
+    /** Returns the animation's current state */
+    State getState() const;
 
-	/** Returns whether the animation is running or not. If the animation has
+    /** Returns whether the animation is running or not. If the animation has
         started but is currently paused, this method will return true.
     */
-	bool isRunning() const;
+    bool isRunning() const;
 
-	/** Returns whether the animation is currently paused */
-	bool isPaused() const;
+    /** Returns whether the animation is currently paused */
+    bool isPaused() const;
 
     /** Set the frame speed of the animation */
     void setSpeed(int ms);
@@ -108,30 +99,30 @@ public:
     */
     int getSpeedHz() const;
 
-	/** Sets the animation's direction
-		@param newDirection			the new direction of the animation
-	*/
-	void setDirection(Direction newDirection);
+    /** Sets the animation's direction
+        @param newDirection            the new direction of the animation
+    */
+    void setDirection(Direction newDirection);
 
-	/** Returns the animation's current direction */
+    /** Returns the animation's current direction */
     Direction getDirection() const;
 
-    /** Sets the animation curve of the animation */
-    void setAnimationCurve(const AnimationCurve& newCurve);
+    /** Returns true if the animation direction is forwards. */
+    bool isForward() const;
 
-    /** Returns a reference to the current AnimationCurve */
-    AnimationCurve& getAnimationCurve();
+    /** Returns true if the animation direction is backwards. */
+    bool isBackward() const;
 
-	/** The number of times the animation should loop before stopping
-		@param loops		the number of times to loop (0 disables the animation, -1 enables endless looping)
-	*/
-	void setNumLoops(int numloops);
+    /** The number of times the animation should loop before stopping
+        @param loops        the number of times to loop (0 disables the animation, -1 enables endless looping)
+    */
+    void setNumLoops(int numloops);
 
-	/** Returns the numbers of times the animation will loop */
-	int getNumLoops() const;
+    /** Returns the numbers of times the animation will loop */
+    int getNumLoops() const;
 
-	/** Returns the current loop number the animation is on */
-	int getCurrentLoop() const;
+    /** Returns the current loop number the animation is on */
+    int getCurrentLoop() const;
 
     /** When enabled, the animation will switch directions after it completes
         a loop.
@@ -141,49 +132,28 @@ public:
     /** Returns whether ping-pong has been enabled. */
     bool getPingPongMode() const;
 
-	/** Sets the length of the animation in milliseconds*/
-	void setDuration(int msDuration);
+    /** Sets the length of the animation in milliseconds*/
+    void setDuration(int msDuration);
 
-	/** Returns length of the animation in milliseconds */
+    /** Returns length of the animation in milliseconds */
     int getDuration() const;
 
     /** Returns whether the animation is infinite */
     bool isEndless() const;
 
-    /** Sets the starting value of the animation. */
-    void setStartValue(var value);
+    /**    A class for receiving callbacks from an Animation.
 
-    /** Returns the value set by setStartValue(). */
-    var getStartValue() const;
-
-    /** Sets the end value of the animation. */
-    void setEndValue(var value);
-
-    /** Returns the value set by setEndValue() */
-    var getEndValue() const;
-
-    /** Returns the current value the animation is at. */
-    var getCurrentValue() const;
-
-    /** Sets the value of a property at a specified keyframe */
-    void setKeyValue(double, var);
-
-    /** Returns the value of a property at a specified keyframe */
-    var getKeyValue(double progress) const;
-
-	/**	A class for receiving callbacks from an Animation.
-
-		To be told when an animation changes, you can register an
+        To be told when an animation changes, you can register an
         Animation::Listener object using Animation::addListener().
 
-		@see Animation::addListener, Animation::removeListener
-	*/
-	struct Listener
-	{
-		virtual ~Listener() {}
+        @see Animation::addListener, Animation::removeListener
+    */
+    struct Listener
+    {
+        virtual ~Listener() {}
 
-		/** Called when an animation begins. */
-		virtual void animationStarted(Animation*) {}
+        /** Called when an animation begins. */
+        virtual void animationStarted(Animation*) {}
 
         /** Called when an animation ends. */
         virtual void animationEnded(Animation*) {}
@@ -191,21 +161,21 @@ public:
         /** Called when an animation advances. */
         virtual void animationAdvanced(Animation*) = 0;
 
-		/** Called when an animation's state changes. */
-		virtual void animationStateChanged(Animation*) {}
+        /** Called when an animation's state changes. */
+        virtual void animationStateChanged(Animation*) {}
 
-		/** Called when an animation loop completes. */
-		virtual void animationLoopChanged(Animation* animation) {}
+        /** Called when an animation loop completes. */
+        virtual void animationLoopChanged(Animation* animation) {}
 
-		/** Called when an animation's direction changes. */
-		virtual void animationDirectionChanged(Animation* animation) {}
-	};
+        /** Called when an animation's direction changes. */
+        virtual void animationDirectionChanged(Animation* animation) {}
+    };
 
-	/** Adds an AnimationListener to the Animation */
-	void addListener(Listener* newListener);
+    /** Adds an AnimationListener to the Animation */
+    void addListener(Listener* newListener);
 
-	/** Removes an AnimationListener from the Animation */
-	void removeListener(Listener* newListener);
+    /** Removes an AnimationListener from the Animation */
+    void removeListener(Listener* newListener);
 
     /** You can assign a lambda to this callback object to have it called when
         the animation begins.
@@ -238,25 +208,45 @@ public:
     std::function<void()> animationDirectionChanged;
 
 protected:
-    /** Called when the animation advances. This can be overriden to provide
+    /** Called when the animation starts, notifying listeners and running the
+        animationStarted() lambda if set.
+    */
+    virtual void handleAnimationStarted();
+
+    /** Called when the animation ends, notifying listeners and running the
+        animationEnded() lambda if set.
+    */
+    virtual void handleAnimationEnded();
+
+    /** Called when the animation advances, notifying listeners and running the
+        animationAdvanced() lambda if set.
+    */
+    virtual void handleAnimationAdvanced();
+
+    /** Called when the animation state changes, notifying listeners and running
+        the animationStateChanged() lambda if set.
+    */
+    virtual void handleAnimationStateChanged();
+
+    /** Called when the animation loop changes, notifying listeners and running
+        the animationLoopChanged() lambda if set.
+    */
+    virtual void handleAnimationLoopChanged();
+
+    /** Called when the animation direction changes, notifying listeners and
+        running the animationDirectionChanged() lambda if set.
+    */
+    virtual void handleAnimationDirectionChanged();
+
+    /** Called when the animation advances. This should be overriden to provide
         custom behavior for the animation.
     */
-    virtual void update(const double progress);
+    virtual void update(const double progress) = 0;
 
-private:
-    void handleAnimationStarted();
-    void handleAnimationEnded();
-    void handleAnimationAdvanced();
-    void handleAnimationStateChanged();
-    void handleAnimationLoopChanged();
-    void handleAnimationDirectionChanged();
-
-    KeyFrame getNextKeyFrame(const double progress) const;
-
+    /** Calculates the animation progress and current loop count. */
     void timerCallback() override;
 
-    //==========================================================================
-
+private:
     int speed;
     int duration;
     int loops;
@@ -268,15 +258,7 @@ private:
     State state;
     Time time;
 
-    var      currentValue;
-    KeyFrame currentKeyStart;
-    KeyFrame currentKeyEnd;
-
     ListenerList<Animation::Listener> listeners;
 
-    SortedSet<KeyFrame> keyframes;
-
-    AnimationCurve curve;
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Animation)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Animation)
 };

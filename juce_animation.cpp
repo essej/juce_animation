@@ -34,6 +34,7 @@
 namespace juce
 {
     #include "animation/juce_Animation.cpp"
+    #include "animation/juce_KeyFrameAnimation.cpp"
     #include "animation/juce_AnimationCurve.cpp"
     #include "animation/juce_AnimationGroup.cpp"
 }

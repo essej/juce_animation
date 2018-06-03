@@ -22,10 +22,6 @@
 
 AnimationGroup::AnimationGroup()
 {
-    setStartValue(0.0f);
-    currentValue = 0.0f;
-    setEndValue(1.0f);
-
     animationMode = Sequential;
 }
 
