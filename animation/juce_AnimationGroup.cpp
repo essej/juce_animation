@@ -39,9 +39,6 @@ void AnimationGroup::addAnimation(Animation* animation)
 {
     animations.add(animation);
 
-    for (auto listener : listeners)
-        animation->addListener(listener);
-
     if (animation->getDuration() > duration)
         duration = animation->getDuration();
 }
@@ -60,9 +57,6 @@ void AnimationGroup::insertAnimation(int index, Animation* animation)
 {
     if (animations.contains(animation))
         animations.remove(&animation);
-
-    for (auto listener : listeners)
-        animation->addListener(listener);
 
     animations.insert(index, animation);
 
@@ -115,30 +109,141 @@ void AnimationGroup::clear()
     animations.clear();
 }
 
-void AnimationGroup::addListener(Animation::Listener *listener)
+void AnimationGroup::handleAnimationStarted()
 {
-    for (auto animation : animations)
-        animation->addListener(listener);
+    if (animationMode == Sequential)
+    {
+        if (isForward())
+            currentIndex = 0;
+        else
+            currentIndex = animations.size() - 1;
 
-    listeners.addIfNotAlreadyThere(listener);
+        auto animation = animations[currentIndex];
+
+        setDuration(animation->getDuration());
+        setNumLoops(animation->getNumLoops());
+        animation->setState(Running);
+    }
+    else
+    {
+        for (auto animation : animations)
+            animation->setState(Running);
+    }
+
+    Animation::handleAnimationStarted();
 }
 
-void AnimationGroup::removeListener(Animation::Listener *listener)
+void AnimationGroup::handleAnimationAdvanced()
 {
-    for (auto animation : animations)
-        animation->removeListener(listener);
+    if (animationMode == Sequential)
+    {
+        auto animation = animations[currentIndex];
 
-    listeners.remove(&listener);
+        if (getElapsedLoopTime() > animation->getDuration())
+            changeAnimation();
+    }
+}
+
+void AnimationGroup::handleAnimationLoopChanged()
+{
+    if (animationMode == Sequential)
+    {
+        auto animation = animations[currentIndex];
+
+        if (getCurrentLoop() >= animation->getNumLoops())
+            changeAnimation();
+    }
+    else
+    {
+        
+    }
+}
+
+void AnimationGroup::handleAnimationStopped()
+{
+    if (animationMode == Sequential)
+    {
+        // Restart the group to move to the next animation
+        if (changeAnimation())
+            start();
+    }
+    else
+    {
+        // TODO: Don't send for animations that already ended
+        for (auto animation : animations)
+            animation->setState(Stopped);
+    }
+
+    Animation::handleAnimationStopped();
+}
+
+bool AnimationGroup::changeAnimation()
+{
+    jassert(animationMode == Sequential);
+
+    auto animation = animations[currentIndex];
+
+    if (isForward())
+    {
+        if (currentIndex < animations.size() - 1)
+        {
+            animation->setState(Stopped);
+
+            currentIndex++;
+            animation = animations[currentIndex];
+            setDuration(animation->getDuration());
+            setNumLoops(animation->getNumLoops());
+            animation->setState(Running);
+        }
+        else
+        {
+            stop();
+            return false;
+        }
+    }
+    else
+    {
+        if (currentIndex > 0)
+        {
+            animation->setState(Stopped);
+
+            currentIndex--;
+            animation = animations[currentIndex];
+            setDuration(animation->getDuration());
+            setNumLoops(animation->getNumLoops());
+            animation->setState(Running);
+        }
+        else
+        {
+            stop();
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void AnimationGroup::update(const double progress)
 {
-    // TODO: Implement animation mode
-    for (auto animation : animations)
+    if (animationMode == Sequential)
     {
-        if (animation->direction == Forward)
+        auto animation = animations[currentIndex];
+
+        if (animation->isForward())
             animation->update(progress);
         else
             animation->update(1.0 - progress);
     }
+    else
+    {
+        for (auto animation : animations)
+        {
+            if (animation->isForward())
+                animation->update(progress);
+            else
+                animation->update(1.0 - progress);
+        }
+    }
+
+    handleAnimationAdvanced();
 }

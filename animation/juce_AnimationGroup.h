@@ -91,24 +91,21 @@ public:
 	/** Removes all animations from the group. */
 	void clear();
 
-    /** Adds a listener to all animations.
-
-        Subsequent animations added to this group will also have this listener
-        attached.
-    */
-    void addListener(Animation::Listener*);
-
-    /** Removes a listener from all animations. */
-    void removeListener(Animation::Listener*);
-
 private:
+    void handleAnimationStarted() override;
+    void handleAnimationAdvanced() override;
+    void handleAnimationLoopChanged() override;
+    void handleAnimationStopped() override;
+
+    bool changeAnimation();
+
     void update(const double progress) override;
 
     Array<Animation*> animations;
-    Array<Animation::Listener*> listeners;
 
     AnimationMode animationMode;
-    int currentAnimation;
+
+    int currentIndex;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnimationGroup)
 };
