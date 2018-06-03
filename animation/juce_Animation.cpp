@@ -10,51 +10,23 @@ Animation::Animation()
 
 void Animation::start()
 {
-    if (!isTimerRunning())
-    {
-        time = Time::getCurrentTime();
-        startTimer(speed);
-    }
-
     setState(Running);
-    handleAnimationStarted();
 }
 
 void Animation::pause()
 {
-    stopTimer();
     setState(Paused);
 }
 
 void Animation::resume()
 {
     if (state == Paused)
-    {
-        time = Time::getCurrentTime();
-        startTimer(speed);
-    }
+        setState(Running);
 }
 
 void Animation::stop()
 {
-    stopTimer();
-    currentLoop = 0;
     setState(Stopped);
-    handleAnimationEnded();
-}
-
-void Animation::setState(Animation::State newState)
-{
-    if (newState != state)
-    {
-        state = newState;
-        handleAnimationStateChanged();
-    }
-}
-
-Animation::State Animation::getState() const
-{
-    return state;
 }
 
 bool Animation::isRunning() const
@@ -132,6 +104,11 @@ int Animation::getCurrentLoop() const
     return currentLoop;
 }
 
+bool Animation::isEndless() const
+{
+    return (loops == -1);
+}
+
 void Animation::setPingPongMode(bool shouldPingPong)
 {
     pingPong = shouldPingPong;
@@ -154,9 +131,16 @@ int Animation::getDuration() const
     return duration;
 }
 
-bool Animation::isEndless() const
+int Animation::getElapsedTime() const
 {
-    return (loops == -1);
+    const auto currentTime = Time::getCurrentTime();
+    return (int)(currentTime.toMilliseconds() - origin.toMilliseconds());
+}
+
+int Animation::getElapsedLoopTime() const
+{
+    const auto currentTime = Time::getCurrentTime();
+    return (int)(currentTime.toMilliseconds() - time.toMilliseconds());
 }
 
 void Animation::addListener(Animation::Listener* newListener)
@@ -171,6 +155,49 @@ void Animation::removeListener(Animation::Listener* newListener)
         listeners.remove(newListener);
 }
 
+void Animation::setState(Animation::State newState)
+{
+    if (newState != state)
+    {
+        const auto prevState = state;
+
+        state = newState;
+
+        if (state == Stopped)
+        {
+            stopTimer();
+            currentLoop = 0;
+
+            handleAnimationStopped();
+        }
+        else if (state == Paused)
+        {
+            stopTimer();
+
+            handleAnimationPaused();
+        }
+        else if (state == Running)
+        {
+            time = Time::getCurrentTime();
+
+            if (prevState == Stopped)
+                origin = time;
+
+            startTimer(speed);
+
+            if (prevState == Paused)
+                handleAnimationResumed();
+            else
+                handleAnimationStarted();
+        }
+    }
+}
+
+Animation::State Animation::getState() const
+{
+    return state;
+}
+
 void Animation::handleAnimationStarted()
 {
     listeners.call(&Animation::Listener::animationStarted, this);
@@ -179,12 +206,28 @@ void Animation::handleAnimationStarted()
         animationStarted();
 }
 
-void Animation::handleAnimationEnded()
+void Animation::handleAnimationPaused()
 {
-    listeners.call(&Animation::Listener::animationEnded, this);
+    listeners.call(&Animation::Listener::animationPaused, this);
 
-    if (animationEnded)
-        animationEnded();
+    if (animationPaused)
+        animationPaused();
+}
+
+void Animation::handleAnimationResumed()
+{
+    listeners.call(&Animation::Listener::animationResumed, this);
+
+    if (animationResumed)
+        animationResumed();
+}
+
+void Animation::handleAnimationStopped()
+{
+    listeners.call(&Animation::Listener::animationStopped, this);
+
+    if (animationStopped)
+        animationStopped();
 }
 
 void Animation::handleAnimationAdvanced()

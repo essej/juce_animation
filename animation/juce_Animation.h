@@ -32,14 +32,6 @@ class Animation : private Timer
 
 public:
     /** */
-    enum State
-    {
-        Stopped,
-        Paused,
-        Running
-    };
-
-    /** */
     enum Direction
     {
         Forward,
@@ -63,15 +55,6 @@ public:
 
     /** Stops the animation */
     void stop();
-
-    /** Explicitly sets the animation state
-
-        @param newState            the state to set the animation to
-    */
-    void setState(State newState);
-
-    /** Returns the animation's current state */
-    State getState() const;
 
     /** Returns whether the animation is running or not. If the animation has
         started but is currently paused, this method will return true.
@@ -124,6 +107,9 @@ public:
     /** Returns the current loop number the animation is on */
     int getCurrentLoop() const;
 
+    /** Returns whether the animation is infinite */
+    bool isEndless() const;
+
     /** When enabled, the animation will switch directions after it completes
         a loop.
     */
@@ -138,8 +124,11 @@ public:
     /** Returns length of the animation in milliseconds */
     int getDuration() const;
 
-    /** Returns whether the animation is infinite */
-    bool isEndless() const;
+    /** Returns the amount of time the animation has been running. */
+    int getElapsedTime() const;
+
+    /** Returns the amount of time the current loop has been running. */
+    int getElapsedLoopTime() const;
 
     /**    A class for receiving callbacks from an Animation.
 
@@ -155,11 +144,17 @@ public:
         /** Called when an animation begins. */
         virtual void animationStarted(Animation*) {}
 
-        /** Called when an animation ends. */
-        virtual void animationEnded(Animation*) {}
+        /** Called when the animation is paused. */
+        virtual void animationPaused(Animation*) {}
+
+        /** Called when the animation is resumed from a pause. */
+        virtual void animationResumed(Animation*) {}
+
+        /** Called when an animation is stopped. */
+        virtual void animationStopped(Animation*) {}
 
         /** Called when an animation advances. */
-        virtual void animationAdvanced(Animation*) = 0;
+        virtual void animationAdvanced(Animation*) {}
 
         /** Called when an animation's state changes. */
         virtual void animationStateChanged(Animation*) {}
@@ -183,9 +178,19 @@ public:
     std::function<void()> animationStarted;
 
     /** You can assign a lambda to this callback object to have it called when
-        the animation ends.
+        the animation pauses.
     */
-    std::function<void()> animationEnded;
+    std::function<void()> animationPaused;
+
+    /** You can assign a lambda to this callback object to have it called when
+        the animation resumes from a pause.
+    */
+    std::function<void()> animationResumed;
+
+    /** You can assign a lambda to this callback object to have it called when
+        the animation is stopped.
+    */
+    std::function<void()> animationStopped;
 
     /** You can assign a lambda to this callback object to have it called when
         the animation advances.
@@ -208,15 +213,42 @@ public:
     std::function<void()> animationDirectionChanged;
 
 protected:
+    /** */
+    enum State
+    {
+        Stopped,
+        Paused,
+        Running
+    };
+
+    /** Explicitly sets the animation state
+
+        @param newState            the state to set the animation to
+    */
+    void setState(State newState);
+
+    /** Returns the animation's current state */
+    State getState() const;
+
     /** Called when the animation starts, notifying listeners and running the
         animationStarted() lambda if set.
     */
     virtual void handleAnimationStarted();
 
-    /** Called when the animation ends, notifying listeners and running the
+    /** Called when the animation pauses, notifying listeners and running the
+        animationPaused() lambda if set.
+    */
+    virtual void handleAnimationPaused();
+
+    /** Called when the animation resumes from a pause, notifying listeners and
+        running the animationResumed() lambda if set.
+    */
+    virtual void handleAnimationResumed();
+
+    /** Called when the animation stops, notifying listeners and running the
         animationEnded() lambda if set.
     */
-    virtual void handleAnimationEnded();
+    virtual void handleAnimationStopped();
 
     /** Called when the animation advances, notifying listeners and running the
         animationAdvanced() lambda if set.
@@ -256,7 +288,8 @@ private:
 
     Direction direction;
     State state;
-    Time time;
+
+    Time origin, time;
 
     ListenerList<Animation::Listener> listeners;
 
