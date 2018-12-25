@@ -74,19 +74,15 @@ struct EasingFunction
     {
         if (duration > 0.0)
         {
-            if (offset > 0.0)
-                t *= 1.0 / offset;
-
             time += t;
 
             const double proportion = (pingpongStatus)
                 ? 1.0 - (time / duration)
                 : time / duration;
 
-            if (offset > 0.0 && offset < 1.0)
-                return (tick(proportion) / (1.0 / (1.0 - offset))) + offset;
-            else
-                return tick(proportion);
+            return (offset != 1.0)
+                ? (tick(proportion) / (1.0 / (1.0 - offset))) + offset
+                : tick(1.0);
         }
         else
         {
