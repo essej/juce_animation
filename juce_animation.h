@@ -2,7 +2,7 @@
  ==============================================================================
 
   This file is part of juce_animation.
-  Copyright (c) 2017 - Antonio Lassandro
+  Copyright (c) 2018 - Antonio Lassandro
 
   juce_animation is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -46,10 +46,72 @@ END_JUCE_MODULE_DECLARATION
 
 //==============================================================================
 
+/** Config: JUCE_ANIMATION_ENABLE_TYPEDEFS
+
+    Enables a set of typedefs to access animation types more easily. Can be
+    disabled if you would like to use your own or change them.
+*/
+#ifndef JUCE_ANIMATION_ENABLE_TYPEDEFS
+ #define JUCE_ANIMATION_ENABLE_TYPEDEFS 1
+#endif
+
+//==============================================================================
+
 namespace juce
 {
-    #include "animation/juce_AnimationCurve.h"
-    #include "animation/juce_Animation.h"
-    #include "animation/juce_KeyFrameAnimation.h"
-    #include "animation/juce_AnimationGroup.h"
+    #include "animation/juce_AnimationPositionBehaviours.h"
+
+    #if JUCE_ANIMATION_ENABLE_TYPEDEFS
+    #define _ANIM_T(b, n) \
+        typedef AnimatedPosition<AnimatedPositionBehaviours::b> n;
+
+    /* Default JUCE animation behaviours */
+    _ANIM_T(ContinuousWithMomentum, MomentumAnimation);
+    _ANIM_T(SnapToPageBoundaries,   SnappingAnimation);
+
+    /* Easing function behaviours */
+    _ANIM_T(EaseLinear,       EaseLinearAnimation);
+    _ANIM_T(EaseInQuad,       EaseInQuadAnimation);
+    _ANIM_T(EaseOutQuad,      EaseOutQuadAnimation);
+    _ANIM_T(EaseInOutQuad,    EaseInOutQuadAnimation);
+    _ANIM_T(EaseOutInQuad,    EaseOutInQuadAnimation);
+    _ANIM_T(EaseInCubic,      EaseInCubicAnimation);
+    _ANIM_T(EaseOutCubic,     EaseOutCubicAnimation);
+    _ANIM_T(EaseInOutCubic,   EaseInOutCubicAnimation);
+    _ANIM_T(EaseOutInCubic,   EaseOutInCubicAnimation);
+    _ANIM_T(EaseInQuart,      EaseInQuartAnimation);
+    _ANIM_T(EaseOutQuart,     EaseOutQuartAnimation);
+    _ANIM_T(EaseInOutQuart,   EaseInOutQuartAnimation);
+    _ANIM_T(EaseOutInQuart,   EaseOutInQuartAnimation);
+    _ANIM_T(EaseInQuint,      EaseInQuintAnimation);
+    _ANIM_T(EaseOutQuint,     EaseOutQuintAnimation);
+    _ANIM_T(EaseInOutQuint,   EaseInOutQuintAnimation);
+    _ANIM_T(EaseOutInQuint,   EaseOutInQuintAnimation);
+    _ANIM_T(EaseInSine,       EaseInSineAnimation);
+    _ANIM_T(EaseOutSine,      EaseOutSineAnimation);
+    _ANIM_T(EaseInOutSine,    EaseInOutSineAnimation);
+    _ANIM_T(EaseOutInSine,    EaseOutInSineAnimation);
+    _ANIM_T(EaseInExpo,       EaseInExpoAnimation);
+    _ANIM_T(EaseOutExpo,      EaseOutExpoAnimation);
+    _ANIM_T(EaseInOutExpo,    EaseInOutExpoAnimation);
+    _ANIM_T(EaseOutInExpo,    EaseOutInExpoAnimation);
+    _ANIM_T(EaseInCirc,       EaseInCircAnimation);
+    _ANIM_T(EaseOutCirc,      EaseOutCircAnimation);
+    _ANIM_T(EaseInOutCirc,    EaseInOutCircAnimation);
+    _ANIM_T(EaseOutInCirc,    EaseOutInCircAnimation);
+    _ANIM_T(EaseInElastic,    EaseInElasticAnimation);
+    _ANIM_T(EaseOutElastic,   EaseOutElasticAnimation);
+    _ANIM_T(EaseInOutElastic, EaseInOutElasticAnimation);
+    _ANIM_T(EaseOutInElastic, EaseOutInElasticAnimation);
+    _ANIM_T(EaseInBack,       EaseInBackAnimation);
+    _ANIM_T(EaseOutBack,      EaseOutBackAnimation);
+    _ANIM_T(EaseInOutBack,    EaseInOutBackAnimation);
+    _ANIM_T(EaseOutInBack,    EaseOutInBackAnimation);
+    _ANIM_T(EaseInBounce,     EaseInBounceAnimation);
+    _ANIM_T(EaseOutBounce,    EaseOutBounceAnimation);
+    _ANIM_T(EaseInOutBounce,  EaseInOutBounceAnimation);
+    _ANIM_T(EaseOutInBounce,  EaseOutInBounceAnimation);
+
+    #undef _ANIM_T
+    #endif
 }

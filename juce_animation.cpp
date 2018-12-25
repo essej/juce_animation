@@ -2,7 +2,7 @@
   ==============================================================================
 
   This file is part of juce_animation.
-  Copyright (c) 2017 - Antonio Lassandro
+  Copyright (c) 2018 - Antonio Lassandro
 
   juce_animation is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,11 +21,12 @@
 */
 
 #ifdef JUCE_ANIMATION_H_INCLUDED
-/* When you add this cpp file to your project, you mustn't include it in a file where you've
- already included any other headers - just put it inside a file on its own, possibly with your config
- flags preceding it, but don't include anything else. That also includes avoiding any automatic prefix
- header files that the compiler may be using.
- */
+/** When you add this cpp file to your project, you mustn't include it in a file
+    where you've already included any other headers - just put it inside a file
+    on its own, possibly with your config flags preceding it, but don't include
+    anything else. That also includes avoiding any automatic prefix header files
+    that the compiler may be using.
+*/
 #error "Incorrect use of JUCE cpp file"
 #endif
 
@@ -33,8 +34,5 @@
 
 namespace juce
 {
-    #include "animation/juce_Animation.cpp"
-    #include "animation/juce_KeyFrameAnimation.cpp"
-    #include "animation/juce_AnimationCurve.cpp"
-    #include "animation/juce_AnimationGroup.cpp"
+
 }
