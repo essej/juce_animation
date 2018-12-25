@@ -541,6 +541,8 @@ struct EaseOutInCirc final : EasingFunction
 */
 struct EaseInElastic final : EasingFunction
 {
+    double amplitude = 1.0, period = 1.0;
+
     double tick(double t) const noexcept override
     {
         return helper(t, 0.0, 1.0, 1.0, amplitude, period);
@@ -573,14 +575,14 @@ struct EaseInElastic final : EasingFunction
         return -(a * pow(2.0, 10.0 * t_adj)
                * sin((t_adj * d - s) * (2.0 * PI) / p));
     }
-
-    double amplitude = 1.0, period = 1.0;
 };
 
 /** Elastic easing (exponentially decaying sinusoid): decelerating to zero
 */
 struct EaseOutElastic final : EasingFunction
 {
+    double amplitude = 1.0, period = 1.0;
+
     double tick(double t) const noexcept override
     {
         return helper(t, 0.0, 1.0, 1.0, amplitude, period);
@@ -607,8 +609,6 @@ struct EaseOutElastic final : EasingFunction
 
         return a * pow(2.0, -10.0 * t) * sin((t - s) * (2.0 * PI) / p) + c;
     }
-
-    double amplitude = 1.0, period = 1.0;
 };
 
 /** Elastic easing (exponentially decaying sinusoid): acceleration halfway, then
@@ -616,6 +616,8 @@ struct EaseOutElastic final : EasingFunction
 */
 struct EaseInOutElastic final : EasingFunction
 {
+    double amplitude = 1.0, period = 1.0;
+
     double tick(double t) const noexcept override
     {
         const double PI = juce::MathConstants<double>::pi;
@@ -648,8 +650,6 @@ struct EaseInOutElastic final : EasingFunction
         return a * pow(2.0, -10.0 * (t - 1.0))
                * sin((t - 1.0 - s) * (2.0 * PI) / period) * 0.5 + 1.0;
     }
-
-    double amplitude = 1.0, period = 1.0;
 };
 
 /** Elastic easing (exponentially decaying sinusoid): deceleration halfway, then
@@ -753,6 +753,8 @@ struct EaseOutInBack final : EasingFunction
 */
 struct EaseOutBounce final : EasingFunction
 {
+    double amplitude = 1.0;
+
     double tick(double t) const noexcept override
     {
         return helper(t, 1.0, amplitude);
@@ -782,20 +784,18 @@ struct EaseOutBounce final : EasingFunction
             return -a * (1.0 - (7.5625 * t * t + 0.984375)) + c;
         }
     }
-
-    double amplitude = 1.0;
 };
 
 /** Bounce easing (exponentially decaying parabola): accelerating from zero
 */
 struct EaseInBounce final : EasingFunction
 {
+    double amplitude = 1.0;
+
     double tick(double t) const noexcept override
     {
         return 1.0 - EaseOutBounce::helper(1.0 - t, 1.0, amplitude);
     }
-
-    double amplitude = 1.0;
 };
 
 /** Bounce easing (exponentially decaying parabola): acceleration halfway, then
@@ -803,6 +803,8 @@ struct EaseInBounce final : EasingFunction
 */
 struct EaseInOutBounce final : EasingFunction
 {
+    double amplitude = 1.0;
+
     double tick(double t) const noexcept override
     {
         if (t < 0.5)
@@ -816,8 +818,6 @@ struct EaseInOutBounce final : EasingFunction
         t = 2.0 * t - 1.0;
         return EaseOutBounce::helper(t, 1.0, amplitude) / 2.0 + 0.5;
     }
-
-    double amplitude = 1.0;
 };
 
 /** Bounce easing (exponentially decaying parabola): deceleration halfway, then
