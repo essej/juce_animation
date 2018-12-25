@@ -189,8 +189,14 @@ struct EaseOutInQuad final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutQuad().tick(t * 2.0) / 2.0;
-        return EaseInQuad().tick((2.0 * t) - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t *= 2.0;
+            return (-t * (t - 2.0)) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        return (t * t) / 2.0 + 0.5;
     }
 };
 
@@ -237,8 +243,14 @@ struct EaseOutInCubic final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutCubic().tick(2.0 * t) / 2.0;
-        return EaseInCubic().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t = 2.0 * t - 1.0;
+            return (t * t * t + 1.0) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        return (t * t * t) / 2.0 + 0.5;
     }
 };
 
@@ -285,8 +297,14 @@ struct EaseOutInQuart final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutQuart().tick(2.0 * t) / 2.0;
-        return EaseInQuart().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t = 2.0 * t - 1.0;
+            return -(t * t * t * t - 1.0) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        return (t * t * t * t) / 2.0 + 0.5;
     }
 };
 
@@ -333,8 +351,14 @@ struct EaseOutInQuint final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutQuint().tick(2.0 * t) / 2.0;
-        return EaseInQuint().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t = 2.0 * t - 1.0;
+            return (t * t * t * t * t + 1.0) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        return (t * t * t * t * t) / 2.0 + 0.5;
     }
 };
 
@@ -379,8 +403,17 @@ struct EaseOutInSine final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutSine().tick(2.0 * t) / 2.0;
-        return EaseInSine().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        const double PI = juce::MathConstants<double>::pi;
+
+        if (t < 0.5)
+        {
+            t *= 2.0;
+            return (sin(t * (PI / 2.0))) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        if (t == 1.0) return t / 2.0 + 0.5;
+        return (-cos(t * (PI / 2.0)) + 1.0) / 2.0 + 0.5;
     }
 };
 
@@ -429,8 +462,22 @@ struct EaseOutInExpo final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutExpo().tick(2.0 * t) / 2.0;
-        return EaseInExpo().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t *= 2.0;
+
+            if (t == 0.0 || t == 1.0)
+                return t / 2.0;
+
+            return (1.001 * (-pow(2.0, -10.0 * t) + 1.0)) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+
+        if (t == 0.0 || t == 1.0)
+            return t / 2.0 + 0.5;
+
+        return (pow(2.0, 10.0 * (t - 1.0)) - 0.001) / 2.0 + 0.5;
     }
 };
 
@@ -477,8 +524,14 @@ struct EaseOutInCirc final : EasingFunction
 {
     double tick(double t) const noexcept override
     {
-        if (t < 0.5) return EaseOutCirc().tick(2.0 * t) / 2.0;
-        return EaseInCirc().tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t < 0.5)
+        {
+            t = (2.0 * t) - 1.0;
+            return sqrt(1.0 - t * t) / 2.0;
+        }
+
+        t = 2.0 * t - 1.0;
+        return -(sqrt(1.0 - t * t) - 1.0) / 2.0 + 0.5;
     }
 };
 
@@ -685,14 +738,12 @@ struct EaseOutInBack final : EasingFunction
     {
         if (t < 0.5)
         {
-            EaseOutBack easing;
-            easing.overshoot = overshoot;
-            return easing.tick(2.0 * t) / 2.0;
+            t = (2.0 * t) - 1.0;
+            return (t * t * ((overshoot + 1.0) * t + overshoot) + 1.0) / 2.0;
         }
 
-        EaseInBack easing;
-        easing.overshoot = overshoot;
-        return easing.tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        t = 2.0 * t - 1.0;
+        return (t * t * ((overshoot + 1.0) * t - overshoot)) / 2.0 + 0.5;
     }
 };
 
@@ -756,14 +807,14 @@ struct EaseInOutBounce final : EasingFunction
     {
         if (t < 0.5)
         {
-            EaseInBounce easing;
-            easing.amplitude = amplitude;
-            return easing.tick(2.0 * t) / 2.0;
+            t = 1.0 - (2.0 * t);
+            return (1.0 - EaseOutBounce::helper(t, 1.0, amplitude)) / 2.0;
         }
 
-        EaseOutBounce easing;
-        easing.amplitude = amplitude;
-        return (t == 1.0) ? 1.0 : easing.tick(2.0 * t - 1.0) / 2.0 + 0.5;
+        if (t == 1.0) return 1.0;
+
+        t = 2.0 * t - 1.0;
+        return EaseOutBounce::helper(t, 1.0, amplitude) / 2.0 + 0.5;
     }
 
     double amplitude = 1.0;
