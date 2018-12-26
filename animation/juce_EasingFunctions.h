@@ -21,118 +21,12 @@
 
 #pragma once
 
-namespace AnimatedPositionBehaviours
-{
-
-/** Abstract easing behaviour. Supports duration, looping, and ping-ponging.
+/** Abstract easing interface
 */
 struct EasingFunction
 {
-    /** The number of times the animation should loop. If the loop count is zero
-        the animation will play once and stop. If the loop count is less than
-        zero the animation will loop indefinitely.
-    */
-    int loops = 0;
-
-    /** The duration of the animation in seconds. If this is zero the
-        animation will end immediately.
-    */
-    double duration = 0.0;
-
-    /** Enables ping-pong mode when looping is also enabled. This will cause the
-        next loop to start from the previous position instead of resetting the
-        position.
-    */
-    bool pingpong = false;
-
-    // =========================================================================
-
     virtual ~EasingFunction() {}
-
-    /** Override this method to perform the easing function. */
-    virtual double tick(double t) const noexcept = 0;
-
-    /** Called by AnimatedPosition<> to provide a velocity and starting position
-        to the animation behaviour. This allows an animation to start midway,
-        such as a bouncing effect that follows dragging a view and releasing.
-    */
-    virtual void releasedWithVelocity(double p, double v) noexcept final
-    {
-        time = 0.0;
-        offset = p;
-        currentLoop = 0;
-        pingpongStatus = false;
-    }
-
-    /** Called by AnimatedPosition<> to get the next position value. This method
-        will convert the absolute milliseconds to a proportion of total elapsed
-        time divded by duration. If duration is 0 this will return the provided
-        position and the animation will subsequently end when isStopped() is
-        called afterwards.
-    */
-    virtual double getNextPosition(double p, double t) noexcept final
-    {
-        if (duration > 0.0)
-        {
-            time += t;
-
-            const double proportion = (pingpongStatus)
-                ? 1.0 - (time / duration)
-                : time / duration;
-
-            return (offset != 1.0)
-                ? (tick(proportion) / (1.0 / (1.0 - offset))) + offset
-                : tick(1.0);
-        }
-        else
-        {
-            return p;
-        }
-    }
-
-    /** Called by AnimatedPosition<> to determine whether or not the animation
-        should end. This method handles the duration, looping, and ping-pong
-        logic.
-    */
-    virtual bool isStopped(double p) noexcept final
-    {
-        if (time >= duration)
-        {
-            time   = 0.0;
-            offset = 0.0;
-
-            if (loops != 0)
-            {
-                if (pingpong)
-                    pingpongStatus = !pingpongStatus;
-
-                if (loops > 0)
-                {
-                    if (currentLoop >= loops)
-                    {
-                        currentLoop = 0;
-                        return true;
-                    }
-                    else
-                    {
-                        currentLoop++;
-                    }
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-protected:
-    double time     = 0.0;
-    double offset   = 0.0;
-    int currentLoop = 0;
-    bool pingpongStatus = false;
+    virtual double tick(double) const noexcept = 0;
 };
 
 // =============================================================================
@@ -833,5 +727,3 @@ struct EaseOutInBounce final : EasingFunction
         return (1.0 - EaseOutBounce::helper(2.0 - 2.0 * t, 0.5, amplitude));
     }
 };
-
-}

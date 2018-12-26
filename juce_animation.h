@@ -59,59 +59,57 @@ END_JUCE_MODULE_DECLARATION
 
 namespace juce
 {
-    #include "animation/juce_AnimationPositionBehaviours.h"
+    #include "animation/juce_EasingFunctions.h"
+    #include "animation/juce_AnimatedPositionBehaviours.h"
 
     #if JUCE_ANIMATION_ENABLE_TYPEDEFS
-    #define _ANIM_T(b, n) \
-        typedef AnimatedPosition<AnimatedPositionBehaviours::b> n;
 
-    /* Default JUCE animation behaviours */
-    _ANIM_T(ContinuousWithMomentum, MomentumAnimation);
-    _ANIM_T(SnapToPageBoundaries,   SnappingAnimation);
+    #define ANIMATION_TYPEDEF(b, n) \
+    typedef AnimatedPosition<AnimatedPositionBehaviours::EasingAnimation<b>> n;
 
-    /* Easing function behaviours */
-    _ANIM_T(EaseLinear,       EaseLinearAnimation);
-    _ANIM_T(EaseInQuad,       EaseInQuadAnimation);
-    _ANIM_T(EaseOutQuad,      EaseOutQuadAnimation);
-    _ANIM_T(EaseInOutQuad,    EaseInOutQuadAnimation);
-    _ANIM_T(EaseOutInQuad,    EaseOutInQuadAnimation);
-    _ANIM_T(EaseInCubic,      EaseInCubicAnimation);
-    _ANIM_T(EaseOutCubic,     EaseOutCubicAnimation);
-    _ANIM_T(EaseInOutCubic,   EaseInOutCubicAnimation);
-    _ANIM_T(EaseOutInCubic,   EaseOutInCubicAnimation);
-    _ANIM_T(EaseInQuart,      EaseInQuartAnimation);
-    _ANIM_T(EaseOutQuart,     EaseOutQuartAnimation);
-    _ANIM_T(EaseInOutQuart,   EaseInOutQuartAnimation);
-    _ANIM_T(EaseOutInQuart,   EaseOutInQuartAnimation);
-    _ANIM_T(EaseInQuint,      EaseInQuintAnimation);
-    _ANIM_T(EaseOutQuint,     EaseOutQuintAnimation);
-    _ANIM_T(EaseInOutQuint,   EaseInOutQuintAnimation);
-    _ANIM_T(EaseOutInQuint,   EaseOutInQuintAnimation);
-    _ANIM_T(EaseInSine,       EaseInSineAnimation);
-    _ANIM_T(EaseOutSine,      EaseOutSineAnimation);
-    _ANIM_T(EaseInOutSine,    EaseInOutSineAnimation);
-    _ANIM_T(EaseOutInSine,    EaseOutInSineAnimation);
-    _ANIM_T(EaseInExpo,       EaseInExpoAnimation);
-    _ANIM_T(EaseOutExpo,      EaseOutExpoAnimation);
-    _ANIM_T(EaseInOutExpo,    EaseInOutExpoAnimation);
-    _ANIM_T(EaseOutInExpo,    EaseOutInExpoAnimation);
-    _ANIM_T(EaseInCirc,       EaseInCircAnimation);
-    _ANIM_T(EaseOutCirc,      EaseOutCircAnimation);
-    _ANIM_T(EaseInOutCirc,    EaseInOutCircAnimation);
-    _ANIM_T(EaseOutInCirc,    EaseOutInCircAnimation);
-    _ANIM_T(EaseInElastic,    EaseInElasticAnimation);
-    _ANIM_T(EaseOutElastic,   EaseOutElasticAnimation);
-    _ANIM_T(EaseInOutElastic, EaseInOutElasticAnimation);
-    _ANIM_T(EaseOutInElastic, EaseOutInElasticAnimation);
-    _ANIM_T(EaseInBack,       EaseInBackAnimation);
-    _ANIM_T(EaseOutBack,      EaseOutBackAnimation);
-    _ANIM_T(EaseInOutBack,    EaseInOutBackAnimation);
-    _ANIM_T(EaseOutInBack,    EaseOutInBackAnimation);
-    _ANIM_T(EaseInBounce,     EaseInBounceAnimation);
-    _ANIM_T(EaseOutBounce,    EaseOutBounceAnimation);
-    _ANIM_T(EaseInOutBounce,  EaseInOutBounceAnimation);
-    _ANIM_T(EaseOutInBounce,  EaseOutInBounceAnimation);
+    /* Easing animation typedefs */
+    ANIMATION_TYPEDEF(EaseLinear,       EaseLinearAnimation);
+    ANIMATION_TYPEDEF(EaseInQuad,       EaseInQuadAnimation);
+    ANIMATION_TYPEDEF(EaseOutQuad,      EaseOutQuadAnimation);
+    ANIMATION_TYPEDEF(EaseInOutQuad,    EaseInOutQuadAnimation);
+    ANIMATION_TYPEDEF(EaseOutInQuad,    EaseOutInQuadAnimation);
+    ANIMATION_TYPEDEF(EaseInCubic,      EaseInCubicAnimation);
+    ANIMATION_TYPEDEF(EaseOutCubic,     EaseOutCubicAnimation);
+    ANIMATION_TYPEDEF(EaseInOutCubic,   EaseInOutCubicAnimation);
+    ANIMATION_TYPEDEF(EaseOutInCubic,   EaseOutInCubicAnimation);
+    ANIMATION_TYPEDEF(EaseInQuart,      EaseInQuartAnimation);
+    ANIMATION_TYPEDEF(EaseOutQuart,     EaseOutQuartAnimation);
+    ANIMATION_TYPEDEF(EaseInOutQuart,   EaseInOutQuartAnimation);
+    ANIMATION_TYPEDEF(EaseOutInQuart,   EaseOutInQuartAnimation);
+    ANIMATION_TYPEDEF(EaseInQuint,      EaseInQuintAnimation);
+    ANIMATION_TYPEDEF(EaseOutQuint,     EaseOutQuintAnimation);
+    ANIMATION_TYPEDEF(EaseInOutQuint,   EaseInOutQuintAnimation);
+    ANIMATION_TYPEDEF(EaseOutInQuint,   EaseOutInQuintAnimation);
+    ANIMATION_TYPEDEF(EaseInSine,       EaseInSineAnimation);
+    ANIMATION_TYPEDEF(EaseOutSine,      EaseOutSineAnimation);
+    ANIMATION_TYPEDEF(EaseInOutSine,    EaseInOutSineAnimation);
+    ANIMATION_TYPEDEF(EaseOutInSine,    EaseOutInSineAnimation);
+    ANIMATION_TYPEDEF(EaseInExpo,       EaseInExpoAnimation);
+    ANIMATION_TYPEDEF(EaseOutExpo,      EaseOutExpoAnimation);
+    ANIMATION_TYPEDEF(EaseInOutExpo,    EaseInOutExpoAnimation);
+    ANIMATION_TYPEDEF(EaseOutInExpo,    EaseOutInExpoAnimation);
+    ANIMATION_TYPEDEF(EaseInCirc,       EaseInCircAnimation);
+    ANIMATION_TYPEDEF(EaseOutCirc,      EaseOutCircAnimation);
+    ANIMATION_TYPEDEF(EaseInOutCirc,    EaseInOutCircAnimation);
+    ANIMATION_TYPEDEF(EaseOutInCirc,    EaseOutInCircAnimation);
+    ANIMATION_TYPEDEF(EaseInElastic,    EaseInElasticAnimation);
+    ANIMATION_TYPEDEF(EaseOutElastic,   EaseOutElasticAnimation);
+    ANIMATION_TYPEDEF(EaseInOutElastic, EaseInOutElasticAnimation);
+    ANIMATION_TYPEDEF(EaseOutInElastic, EaseOutInElasticAnimation);
+    ANIMATION_TYPEDEF(EaseInBack,       EaseInBackAnimation);
+    ANIMATION_TYPEDEF(EaseOutBack,      EaseOutBackAnimation);
+    ANIMATION_TYPEDEF(EaseInOutBack,    EaseInOutBackAnimation);
+    ANIMATION_TYPEDEF(EaseOutInBack,    EaseOutInBackAnimation);
+    ANIMATION_TYPEDEF(EaseInBounce,     EaseInBounceAnimation);
+    ANIMATION_TYPEDEF(EaseOutBounce,    EaseOutBounceAnimation);
+    ANIMATION_TYPEDEF(EaseInOutBounce,  EaseInOutBounceAnimation);
+    ANIMATION_TYPEDEF(EaseOutInBounce,  EaseOutInBounceAnimation);
 
-    #undef _ANIM_T
+    #undef ANIMATION_TYPEDEF
     #endif
 }
