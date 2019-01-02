@@ -3,7 +3,6 @@
 namespace AnimatedPositionBehaviours
 {
 
-template<typename EasingType>
 class EasingAnimation
 {
 public:
@@ -25,11 +24,8 @@ public:
     bool pingpong = false;
 
     /** The easing function to use when calculating the next animation position.
-        This should be a functor with the operator() overloaded:
-
-            double operator() (double);
     */
-    EasingType easing;
+    std::function<double(double)> easing;
 
     // =========================================================================
 
@@ -62,6 +58,9 @@ public:
             const double proportion = (pingpongStatus)
                 ? 1.0 - (time / duration)
                 : time / duration;
+
+            if (easing == nullptr)
+                return proportion;
 
             if (offset == 1.0)
                 return easing(1.0);

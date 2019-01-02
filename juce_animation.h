@@ -46,73 +46,8 @@ END_JUCE_MODULE_DECLARATION
 
 //==============================================================================
 
-/** Config: JUCE_ANIMATION_ENABLE_TYPEDEFS
-
-    Enables a set of typedefs to access animation types more easily. Can be
-    disabled if you would like to use your own or change them.
-
-    The typedefs will be the easing function name with "Animation" appended. For
-    example, "EaseInOutQuint" becomes "EaseInOutQuintAnimation".
-*/
-#ifndef JUCE_ANIMATION_ENABLE_TYPEDEFS
- #define JUCE_ANIMATION_ENABLE_TYPEDEFS 1
-#endif
-
-//==============================================================================
-
 namespace juce
 {
     #include "animation/juce_EasingFunctions.h"
     #include "animation/juce_AnimatedPositionBehaviours.h"
-
-    #if JUCE_ANIMATION_ENABLE_TYPEDEFS
-
-    #define ANIMATION_TYPEDEF(b)                                               \
-    typedef AnimatedPosition<AnimatedPositionBehaviours::EasingAnimation<b>>   \
-    b##Animation;
-
-    ANIMATION_TYPEDEF(EaseLinear);
-    ANIMATION_TYPEDEF(EaseInQuad);
-    ANIMATION_TYPEDEF(EaseOutQuad);
-    ANIMATION_TYPEDEF(EaseInOutQuad);
-    ANIMATION_TYPEDEF(EaseOutInQuad);
-    ANIMATION_TYPEDEF(EaseInCubic);
-    ANIMATION_TYPEDEF(EaseOutCubic);
-    ANIMATION_TYPEDEF(EaseInOutCubic);
-    ANIMATION_TYPEDEF(EaseOutInCubic);
-    ANIMATION_TYPEDEF(EaseInQuart);
-    ANIMATION_TYPEDEF(EaseOutQuart);
-    ANIMATION_TYPEDEF(EaseInOutQuart);
-    ANIMATION_TYPEDEF(EaseOutInQuart);
-    ANIMATION_TYPEDEF(EaseInQuint);
-    ANIMATION_TYPEDEF(EaseOutQuint);
-    ANIMATION_TYPEDEF(EaseInOutQuint);
-    ANIMATION_TYPEDEF(EaseOutInQuint);
-    ANIMATION_TYPEDEF(EaseInSine);
-    ANIMATION_TYPEDEF(EaseOutSine);
-    ANIMATION_TYPEDEF(EaseInOutSine);
-    ANIMATION_TYPEDEF(EaseOutInSine);
-    ANIMATION_TYPEDEF(EaseInExpo);
-    ANIMATION_TYPEDEF(EaseOutExpo);
-    ANIMATION_TYPEDEF(EaseInOutExpo);
-    ANIMATION_TYPEDEF(EaseOutInExpo);
-    ANIMATION_TYPEDEF(EaseInCirc);
-    ANIMATION_TYPEDEF(EaseOutCirc);
-    ANIMATION_TYPEDEF(EaseInOutCirc);
-    ANIMATION_TYPEDEF(EaseOutInCirc);
-    ANIMATION_TYPEDEF(EaseInElastic);
-    ANIMATION_TYPEDEF(EaseOutElastic);
-    ANIMATION_TYPEDEF(EaseInOutElastic);
-    ANIMATION_TYPEDEF(EaseOutInElastic);
-    ANIMATION_TYPEDEF(EaseInBack);
-    ANIMATION_TYPEDEF(EaseOutBack);
-    ANIMATION_TYPEDEF(EaseInOutBack);
-    ANIMATION_TYPEDEF(EaseOutInBack);
-    ANIMATION_TYPEDEF(EaseInBounce);
-    ANIMATION_TYPEDEF(EaseOutBounce);
-    ANIMATION_TYPEDEF(EaseInOutBounce);
-    ANIMATION_TYPEDEF(EaseOutInBounce);
-
-    #undef ANIMATION_TYPEDEF
-    #endif
 }
