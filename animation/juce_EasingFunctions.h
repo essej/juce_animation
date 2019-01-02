@@ -21,21 +21,13 @@
 
 #pragma once
 
-/** Abstract easing interface
-*/
-struct EasingFunction
-{
-    virtual ~EasingFunction() {}
-    virtual double tick(double) const noexcept = 0;
-};
-
 // =============================================================================
 
 /** No easing, linear tween
 */
-struct EaseLinear final : EasingFunction
+struct EaseLinear
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t;
     }
@@ -45,9 +37,9 @@ struct EaseLinear final : EasingFunction
 
 /** Quadratic easing (t^2): accelerating from zero
 */
-struct EaseInQuad final : EasingFunction
+struct EaseInQuad
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t * t;
     }
@@ -55,9 +47,9 @@ struct EaseInQuad final : EasingFunction
 
 /** Quadratic easing (t^2): decelerating to zero
 */
-struct EaseOutQuad final : EasingFunction
+struct EaseOutQuad
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return -t * (t - 2.0);
     }
@@ -65,9 +57,9 @@ struct EaseOutQuad final : EasingFunction
 
 /** Quadratic easing (t^2): acceleration halfway, then deceleration
 */
-struct EaseInOutQuad final : EasingFunction
+struct EaseInOutQuad
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t *= 2.0;
         if (t < 1.0) return t * t / 2.0;
@@ -79,9 +71,9 @@ struct EaseInOutQuad final : EasingFunction
 
 /** Quadratic easing (t^2): deceleration halfway, then acceleration
 */
-struct EaseOutInQuad final : EasingFunction
+struct EaseOutInQuad
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -98,9 +90,9 @@ struct EaseOutInQuad final : EasingFunction
 
 /** Cubic easing (t^3): accelerating from zero
 */
-struct EaseInCubic final : EasingFunction
+struct EaseInCubic
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t * t * t;
     }
@@ -108,9 +100,9 @@ struct EaseInCubic final : EasingFunction
 
 /** Cubic easing (t^3): decelerating to zero
 */
-struct EaseOutCubic final : EasingFunction
+struct EaseOutCubic
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t -= 1.0;
         return t * t * t + 1.0;
@@ -119,9 +111,9 @@ struct EaseOutCubic final : EasingFunction
 
 /** Cubic easing (t^3): acceleration halfway, then deceleration
 */
-struct EaseInOutCubic final : EasingFunction
+struct EaseInOutCubic
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t *= 2.0;
         if (t < 1.0) return 0.5 * t * t * t;
@@ -133,9 +125,9 @@ struct EaseInOutCubic final : EasingFunction
 
 /** Cubic easing (t^3): deceleration halfway, then acceleration
 */
-struct EaseOutInCubic final : EasingFunction
+struct EaseOutInCubic
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -152,9 +144,9 @@ struct EaseOutInCubic final : EasingFunction
 
 /** Quartic easing (t^4): accelerating from zero
 */
-struct EaseInQuart final : EasingFunction
+struct EaseInQuart
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t * t * t * t;
     }
@@ -162,9 +154,9 @@ struct EaseInQuart final : EasingFunction
 
 /** Quartic easing (t^4): decelerating to zero
 */
-struct EaseOutQuart final : EasingFunction
+struct EaseOutQuart
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t -= 1.0;
         return -(t * t * t * t - 1.0);
@@ -173,9 +165,9 @@ struct EaseOutQuart final : EasingFunction
 
 /** Quartic easing (t^4): acceleration halfway, then deceleration
 */
-struct EaseInOutQuart final : EasingFunction
+struct EaseInOutQuart
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t *= 2.0;
         if (t < 1.0) return 0.5 * t * t * t * t;
@@ -187,9 +179,9 @@ struct EaseInOutQuart final : EasingFunction
 
 /** Quartic easing (t^4): deceleration halfway, then acceleration
 */
-struct EaseOutInQuart final : EasingFunction
+struct EaseOutInQuart
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -206,9 +198,9 @@ struct EaseOutInQuart final : EasingFunction
 
 /** Quintic easing (t^5): accelerating from zero
 */
-struct EaseInQuint final : EasingFunction
+struct EaseInQuint
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t * t * t * t * t;
     }
@@ -216,9 +208,9 @@ struct EaseInQuint final : EasingFunction
 
 /** Quintic easing (t^5): decelerating to zero
 */
-struct EaseOutQuint final : EasingFunction
+struct EaseOutQuint
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t -= 1.0;
         return t * t * t * t * t + 1.0;
@@ -227,9 +219,9 @@ struct EaseOutQuint final : EasingFunction
 
 /** Quintic easing (t^5): accelerating halfway, then deceleration
 */
-struct EaseInOutQuint final : EasingFunction
+struct EaseInOutQuint
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t *= 2.0;
         if (t < 1.0) return 0.5 * t * t * t * t * t;
@@ -241,9 +233,9 @@ struct EaseInOutQuint final : EasingFunction
 
 /** Quintic easing (t^5): accelerating halfway, then deceleration
 */
-struct EaseOutInQuint final : EasingFunction
+struct EaseOutInQuint
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -260,9 +252,9 @@ struct EaseOutInQuint final : EasingFunction
 
 /** Sinusoidal easing (sin(t)): accelerating from zero
 */
-struct EaseInSine final : EasingFunction
+struct EaseInSine
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         const double PI = juce::MathConstants<double>::pi;
         return (t == 1.0) ? 1.0 : -cos(t * (PI / 2.0)) + 1.0;
@@ -271,9 +263,9 @@ struct EaseInSine final : EasingFunction
 
 /** Sinusoidal easing (sin(t)): decelerating to zero
 */
-struct EaseOutSine final : EasingFunction
+struct EaseOutSine
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         const double PI = juce::MathConstants<double>::pi;
         return sin(t * (PI / 2.0));
@@ -282,9 +274,9 @@ struct EaseOutSine final : EasingFunction
 
 /** Sinusoidal easing (sin(t)): acceleration halfway, then deceleration
 */
-struct EaseInOutSine final : EasingFunction
+struct EaseInOutSine
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         const double PI = juce::MathConstants<double>::pi;
         return 0.5 * (cos(PI * t) - 1.0);
@@ -293,9 +285,9 @@ struct EaseInOutSine final : EasingFunction
 
 /** Sinusoidal easing (sin(t)): acceleration halfway, then deceleration
 */
-struct EaseOutInSine final : EasingFunction
+struct EaseOutInSine
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         const double PI = juce::MathConstants<double>::pi;
 
@@ -315,9 +307,9 @@ struct EaseOutInSine final : EasingFunction
 
 /** Exponential easing (2 ^ t): accelerating from zero
 */
-struct EaseInExpo final : EasingFunction
+struct EaseInExpo
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t == 0.0 || t == 1.0) return t;
         return pow(2.0, 10.0 * (t - 1.0)) - 0.001;
@@ -326,9 +318,9 @@ struct EaseInExpo final : EasingFunction
 
 /** Exponential easing (2 ^ t): decelerating to zero
 */
-struct EaseOutExpo final : EasingFunction
+struct EaseOutExpo
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t == 1.0) return t;
         return 1.001 * (-pow(2.0, -10.0 * t) + 1.0);
@@ -337,9 +329,9 @@ struct EaseOutExpo final : EasingFunction
 
 /** Exponential easing (2 ^ t): acceleration halfway, then deceleration
 */
-struct EaseInOutExpo final : EasingFunction
+struct EaseInOutExpo
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t == 0.0 || t == 1.0) return t;
 
@@ -352,9 +344,9 @@ struct EaseInOutExpo final : EasingFunction
 
 /** Exponential easing (2 ^ t): deceleration halfway, then acceleration
 */
-struct EaseOutInExpo final : EasingFunction
+struct EaseOutInExpo
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -379,9 +371,9 @@ struct EaseOutInExpo final : EasingFunction
 
 /** Circular easing (sqrt(1-t^2)): accelerating from zero
 */
-struct EaseInCirc final : EasingFunction
+struct EaseInCirc
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return -(sqrt(1.0 - t * t) - 1.0);
     }
@@ -389,9 +381,9 @@ struct EaseInCirc final : EasingFunction
 
 /** Circular easing (sqrt(1-t^2)): decelerating to zero
 */
-struct EaseOutCirc final : EasingFunction
+struct EaseOutCirc
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t -= 1.0;
         return sqrt(1.0 - t * t);
@@ -400,9 +392,9 @@ struct EaseOutCirc final : EasingFunction
 
 /** Circular easing (sqrt(1-t^2)): acceleration halfway, then deceleration
 */
-struct EaseInOutCirc final : EasingFunction
+struct EaseInOutCirc
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t *= 2.0;
         if (t < 1.0) return -0.5 * (sqrt(1.0 - t * t) - 1.0);
@@ -414,9 +406,9 @@ struct EaseInOutCirc final : EasingFunction
 
 /** Circular easing (sqrt(1-t^2)): deceleration halfway, then acceleration
 */
-struct EaseOutInCirc final : EasingFunction
+struct EaseOutInCirc
 {
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -433,11 +425,11 @@ struct EaseOutInCirc final : EasingFunction
 
 /** Elastic easing (exponentially decaying sinusoid): accelerating from zero
 */
-struct EaseInElastic final : EasingFunction
+struct EaseInElastic
 {
     double amplitude = 1.0, period = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return helper(t, 0.0, 1.0, 1.0, amplitude, period);
     }
@@ -473,11 +465,11 @@ struct EaseInElastic final : EasingFunction
 
 /** Elastic easing (exponentially decaying sinusoid): decelerating to zero
 */
-struct EaseOutElastic final : EasingFunction
+struct EaseOutElastic
 {
     double amplitude = 1.0, period = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return helper(t, 0.0, 1.0, 1.0, amplitude, period);
     }
@@ -508,11 +500,11 @@ struct EaseOutElastic final : EasingFunction
 /** Elastic easing (exponentially decaying sinusoid): acceleration halfway, then
    deceleration
 */
-struct EaseInOutElastic final : EasingFunction
+struct EaseInOutElastic
 {
     double amplitude = 1.0, period = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         const double PI = juce::MathConstants<double>::pi;
 
@@ -549,11 +541,11 @@ struct EaseInOutElastic final : EasingFunction
 /** Elastic easing (exponentially decaying sinusoid): deceleration halfway, then
    acceleration
 */
-struct EaseOutInElastic final : EasingFunction
+struct EaseOutInElastic
 {
     double amplitude = 1.0, period = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -572,11 +564,11 @@ struct EaseOutInElastic final : EasingFunction
 
 /** Back easing (overshoot cubic: (s+1)*t^3 - s*t^2): accelerating from zero
 */
-struct EaseInBack final : EasingFunction
+struct EaseInBack
 {
     double overshoot = 1.70158;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return t * t * ((overshoot + 1.0) * t - overshoot);
     }
@@ -584,11 +576,11 @@ struct EaseInBack final : EasingFunction
 
 /** Back easing (overshoot cubic: (s+1)*t^3 - s*t^2): decelerating to zero
 */
-struct EaseOutBack final : EasingFunction
+struct EaseOutBack
 {
     double overshoot = 1.70158;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         t -= 1.0;
         return t * t * ((overshoot + 1.0) * t + overshoot) + 1.0;
@@ -598,11 +590,11 @@ struct EaseOutBack final : EasingFunction
 /** Back easing (overshoot cubic: (s+1)*t^3 - s*t^2): acceleration halfway, then
    deceleration
 */
-struct EaseInOutBack final : EasingFunction
+struct EaseInOutBack
 {
     double overshoot = 1.70158;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         double s = overshoot;
 
@@ -624,11 +616,11 @@ struct EaseInOutBack final : EasingFunction
 /** Back easing (overshoot cubic: (s+1)*t^3 - s*t^2): deceleration halfway, then
     acceleration
 */
-struct EaseOutInBack final : EasingFunction
+struct EaseOutInBack
 {
     double overshoot = 1.70158;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -645,11 +637,11 @@ struct EaseOutInBack final : EasingFunction
 
 /** Bounce easing (exponentially decaying parabola): decelerating to zero
 */
-struct EaseOutBounce final : EasingFunction
+struct EaseOutBounce
 {
     double amplitude = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return helper(t, 1.0, amplitude);
     }
@@ -682,11 +674,11 @@ struct EaseOutBounce final : EasingFunction
 
 /** Bounce easing (exponentially decaying parabola): accelerating from zero
 */
-struct EaseInBounce final : EasingFunction
+struct EaseInBounce
 {
     double amplitude = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         return 1.0 - EaseOutBounce::helper(1.0 - t, 1.0, amplitude);
     }
@@ -695,11 +687,11 @@ struct EaseInBounce final : EasingFunction
 /** Bounce easing (exponentially decaying parabola): acceleration halfway, then
    deceleration
 */
-struct EaseInOutBounce final : EasingFunction
+struct EaseInOutBounce
 {
     double amplitude = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5)
         {
@@ -717,11 +709,11 @@ struct EaseInOutBounce final : EasingFunction
 /** Bounce easing (exponentially decaying parabola): deceleration halfway, then
     acceleration
 */
-struct EaseOutInBounce final : EasingFunction
+struct EaseOutInBounce
 {
     double amplitude = 1.0;
 
-    double tick(double t) const noexcept override
+    double operator() (double t) const noexcept
     {
         if (t < 0.5) return EaseOutBounce::helper(t * 2.0, 0.5, amplitude);
         return (1.0 - EaseOutBounce::helper(2.0 - 2.0 * t, 0.5, amplitude));

@@ -25,11 +25,9 @@ public:
     bool pingpong = false;
 
     /** The easing function to use when calculating the next animation position.
-        This should be a functor with the function:
+        This should be a functor with the operator() overloaded:
 
-            double tick(double);
-
-        This may either be a subclass of EasingFunction or a simple functor.
+            double operator() (double);
     */
     EasingType easing;
 
@@ -66,9 +64,9 @@ public:
                 : time / duration;
 
             if (offset == 1.0)
-                return easing.tick(1.0);
+                return easing(1.0);
 
-            return easing.tick(proportion) / (1.0 / (1.0 - offset)) + offset;
+            return easing(proportion) / (1.0 / (1.0 - offset)) + offset;
         }
         else
         {
