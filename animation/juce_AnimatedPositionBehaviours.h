@@ -1,10 +1,22 @@
 #pragma once
 
+/** Contains classes for different types of animation behaviours - these classes
+    are used as template parameters for the AnimatedPosition class.
+*/
 namespace AnimatedPositionBehaviours
 {
 
-class EasingAnimation
+/** A behaviour that allows the animation to have an easing curve applied to it
+    rather than simply following a linear interpolation.
+
+    This behaviour also provides timing functionality to control the duration,
+    number of loops, and loop behaviour (i.e. the auto reversing ping-pong mode)
+    of the animation.
+*/
+class Eased
 {
+    friend class AnimatedPosition<Eased>;
+
 public:
     /** The number of times the animation should loop. If the loop count is zero
         the animation will play once and stop. If the loop count is less than
@@ -17,25 +29,25 @@ public:
     */
     double duration = 0.0;
 
-    /** Enables ping-pong mode when looping is also enabled. This will cause the
-        next loop to start from the previous position instead of resetting the
-        position.
+    /** Enables ping-pong mode if looping is also enabled. This will cause the
+        next loop to start from the animation's last position and the direction
+        of the animation to reverse.
     */
     bool pingpong = false;
 
     /** The easing function to use when calculating the next animation position.
+
+        If no easing function is provided the value will be interpolated
+        linearly based on the duration.
     */
     std::function<double(double)> easing;
 
-    // =========================================================================
-
-    virtual ~EasingAnimation() {}
-
+protected:
     /** Called by AnimatedPosition<> to provide a velocity and starting position
         to the animation behaviour. This allows an animation to start midway,
         such as a bouncing effect that follows dragging a view and releasing.
     */
-    virtual void releasedWithVelocity(double pos, double vel) noexcept
+    void releasedWithVelocity(double pos, double vel) noexcept
     {
         time = 0.0;
         offset = pos;
@@ -49,7 +61,7 @@ public:
         position and the animation will subsequently end when isStopped() is
         called afterwards.
     */
-    virtual double getNextPosition(double pos, double t) noexcept
+    double getNextPosition(double pos, double t) noexcept
     {
         if (duration > 0.0)
         {
@@ -77,7 +89,7 @@ public:
         should end. This method handles the duration, looping, and ping-pong
         logic.
     */
-    virtual bool isStopped(double pos) noexcept
+    bool isStopped(double pos) noexcept
     {
         if (time >= duration)
         {
@@ -111,7 +123,6 @@ public:
         return false;
     }
 
-protected:
     double time   = 0.0;
     double offset = 0.0;
     int currentLoop = 0;

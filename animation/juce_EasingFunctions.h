@@ -21,6 +21,9 @@
 
 #pragma once
 
+namespace EasingFunctions
+{
+
 // =============================================================================
 
 /** No easing, linear tween
@@ -719,3 +722,5 @@ struct EaseOutInBounce
         return (1.0 - EaseOutBounce::helper(2.0 - 2.0 * t, 0.5, amplitude));
     }
 };
+
+}
