@@ -84,6 +84,8 @@ protected:
             return pos;
         }
     }
+    
+public:
 
     /** Called by AnimatedPosition<> to determine whether or not the animation
         should end. This method handles the duration, looping, and ping-pong
@@ -123,6 +125,7 @@ protected:
         return false;
     }
 
+protected:
     double time   = 0.0;
     double offset = 0.0;
     int currentLoop = 0;
